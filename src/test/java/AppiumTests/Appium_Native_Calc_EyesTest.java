@@ -10,6 +10,8 @@ import com.applitools.eyes.selenium.ClassicRunner;
 import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.MobileElement;
 import io.appium.java_client.remote.MobileCapabilityType;
+import io.appium.java_client.service.local.AppiumDriverLocalService;
+import io.appium.java_client.service.local.AppiumServiceBuilder;
 import org.junit.jupiter.api.*;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -26,13 +28,29 @@ class Appium_Native_Calc_EyesTest {
     private static ClassicRunner classicRunner;
     private AppiumDriver<WebElement> driver;
     private Eyes eyes;
-    private final String APPIUM_SERVER_URL = "http://localhost:4723/wd/hub";
+    private static String APPIUM_SERVER_URL = "NOT_SET";
     private static final String userName = System.getProperty("user.name");
+    private static AppiumDriverLocalService localAppiumServer;
 
     @BeforeAll
     public static void beforeAll() {
+        startAppiumServer();
         batch = new BatchInfo(userName + "-" + className);
         classicRunner = new ClassicRunner();
+    }
+
+    private static void startAppiumServer() {
+        System.out.println(String.format("Start local Appium server"));
+        AppiumServiceBuilder serviceBuilder = new AppiumServiceBuilder();
+        // Use any port, in case the default 4723 is already taken (maybe by another Appium server)
+        serviceBuilder.usingAnyFreePort();
+        localAppiumServer = AppiumDriverLocalService.buildService(serviceBuilder);
+        localAppiumServer.start();
+        APPIUM_SERVER_URL = localAppiumServer.getUrl()
+                                             .toString();
+        System.out.println(String.format("Appium server started on url: '%s'",
+                                         localAppiumServer.getUrl()
+                                                          .toString()));
     }
 
     @BeforeEach
@@ -115,10 +133,14 @@ class Appium_Native_Calc_EyesTest {
 
     @AfterEach
     void tearDown() {
-//        ResultUtils.checkAppiumResults(eyes);
         driver.quit();
         eyes.closeAsync();
         TestResultsSummary allTestResults = classicRunner.getAllTestResults(false);
         System.out.println(allTestResults);
+
+        System.out.println(String.format("Stopping the local Appium server running on: '%s'",
+                                         APPIUM_SERVER_URL));
+        localAppiumServer.stop();
+        System.out.println("Is Appium server running? " + localAppiumServer.isRunning());
     }
 }
