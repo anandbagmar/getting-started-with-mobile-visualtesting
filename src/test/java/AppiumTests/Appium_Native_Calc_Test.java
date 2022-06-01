@@ -4,10 +4,9 @@ import Utilities.Wait;
 import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.MobileElement;
 import io.appium.java_client.remote.MobileCapabilityType;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInfo;
+import io.appium.java_client.service.local.AppiumDriverLocalService;
+import io.appium.java_client.service.local.AppiumServiceBuilder;
+import org.junit.jupiter.api.*;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.DesiredCapabilities;
@@ -18,8 +17,14 @@ import java.net.URL;
 
 class Appium_Native_Calc_Test {
 
+    private static AppiumDriverLocalService localAppiumServer;
     private AppiumDriver<WebElement> driver;
-    private final String APPIUM_SERVER_URL = "http://localhost:4723/wd/hub";
+    private static String APPIUM_SERVER_URL = "NOT_SET";
+
+    @BeforeAll
+    static void beforeAll() {
+        startAppiumServer();
+    }
 
     @BeforeEach
     void setUp(TestInfo testInfo) throws
@@ -53,6 +58,20 @@ class Appium_Native_Calc_Test {
         handleUpgradePopup();
     }
 
+    private static void startAppiumServer() {
+        System.out.println(String.format("Start local Appium server"));
+        AppiumServiceBuilder serviceBuilder = new AppiumServiceBuilder();
+        // Use any port, in case the default 4723 is already taken (maybe by another Appium server)
+        serviceBuilder.usingAnyFreePort();
+        localAppiumServer = AppiumDriverLocalService.buildService(serviceBuilder);
+        localAppiumServer.start();
+        APPIUM_SERVER_URL = localAppiumServer.getUrl()
+                                             .toString();
+        System.out.println(String.format("Appium server started on url: '%s'",
+                                         localAppiumServer.getUrl()
+                                                          .toString()));
+    }
+
     private void handleUpgradePopup() {
         Wait.waitFor(1);
         MobileElement upgradeAppNotificationElement = (MobileElement) driver.findElementById("android:id/button1");
@@ -84,5 +103,13 @@ class Appium_Native_Calc_Test {
     @AfterEach
     void tearDown() {
         driver.quit();
+    }
+
+    @AfterAll
+    static void afterAll() {
+        System.out.println(String.format("Stopping the local Appium server running on: '%s'",
+                                         APPIUM_SERVER_URL));
+        localAppiumServer.stop();
+        System.out.println("Is Appium server running? " + localAppiumServer.isRunning());
     }
 }

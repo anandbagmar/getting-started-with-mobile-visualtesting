@@ -137,7 +137,10 @@ class Appium_Native_Calc_EyesTest {
         eyes.closeAsync();
         TestResultsSummary allTestResults = classicRunner.getAllTestResults(false);
         System.out.println(allTestResults);
+    }
 
+    @AfterAll
+    static void afterAll() {
         System.out.println(String.format("Stopping the local Appium server running on: '%s'",
                                          APPIUM_SERVER_URL));
         localAppiumServer.stop();
