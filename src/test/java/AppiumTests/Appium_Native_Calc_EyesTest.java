@@ -8,7 +8,6 @@ import com.applitools.eyes.TestResultsSummary;
 import com.applitools.eyes.appium.Eyes;
 import com.applitools.eyes.selenium.ClassicRunner;
 import io.appium.java_client.AppiumDriver;
-import io.appium.java_client.MobileElement;
 import io.appium.java_client.remote.MobileCapabilityType;
 import io.appium.java_client.service.local.AppiumDriverLocalService;
 import io.appium.java_client.service.local.AppiumServiceBuilder;
@@ -26,7 +25,7 @@ class Appium_Native_Calc_EyesTest {
     private static BatchInfo batch;
     private static final String className = Appium_Native_Calc_EyesTest.class.getSimpleName();
     private static ClassicRunner classicRunner;
-    private AppiumDriver<WebElement> driver;
+    private AppiumDriver driver;
     private Eyes eyes;
     private static String APPIUM_SERVER_URL = "NOT_SET";
     private static final String userName = System.getProperty("user.name");
@@ -44,7 +43,8 @@ class Appium_Native_Calc_EyesTest {
         AppiumServiceBuilder serviceBuilder = new AppiumServiceBuilder();
         // Use any port, in case the default 4723 is already taken (maybe by another Appium server)
         serviceBuilder.usingAnyFreePort();
-        localAppiumServer = AppiumDriverLocalService.buildService(serviceBuilder);
+        localAppiumServer = AppiumDriverLocalService.buildService(serviceBuilder)
+                                                    .withBasePath("/wd/hub/");
         localAppiumServer.start();
         APPIUM_SERVER_URL = localAppiumServer.getUrl()
                                              .toString();
@@ -77,7 +77,7 @@ class Appium_Native_Calc_EyesTest {
                                    "com.android2.calculator3");
         capabilities.setCapability("appActivity",
                                    "com.android2.calculator3.Calculator");
-        driver = new AppiumDriver<>(new URL(APPIUM_SERVER_URL),
+        driver = new AppiumDriver(new URL(APPIUM_SERVER_URL),
                                     capabilities);
         System.out.println(String.format("Created AppiumDriver for - %s",
                                          APPIUM_SERVER_URL));
@@ -102,12 +102,12 @@ class Appium_Native_Calc_EyesTest {
 
     private void handleUpgradePopup() {
         Wait.waitFor(1);
-        MobileElement upgradeAppNotificationElement = (MobileElement) driver.findElementById("android:id/button1");
+        WebElement upgradeAppNotificationElement = (WebElement) driver.findElement(By.id("android:id/button1"));
         if (null != upgradeAppNotificationElement) {
             upgradeAppNotificationElement.click();
             Wait.waitFor(1);
         }
-        MobileElement gotItElement = (MobileElement) driver.findElementById("com.android2.calculator3:id/cling_dismiss");
+        WebElement gotItElement = (WebElement) driver.findElement(By.id("com.android2.calculator3:id/cling_dismiss"));
         if (null != gotItElement) {
             gotItElement.click();
             Wait.waitFor(1);
