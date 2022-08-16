@@ -44,7 +44,7 @@ class Appium_Native_Calc_EyesTest {
         // Use any port, in case the default 4723 is already taken (maybe by another Appium server)
         serviceBuilder.usingAnyFreePort();
 
-        // uncomment if using Appium 1.x
+        // Appium 1.x
         // localAppiumServer = AppiumDriverLocalService.buildService(serviceBuilder)
         //                                                    .withBasePath("/wd/hub/");
 
@@ -63,7 +63,7 @@ class Appium_Native_Calc_EyesTest {
                                   MalformedURLException {
         System.out.println("Test - " + testInfo.getDisplayName());
         System.out.println(String.format("Create AppiumDriver for - %s", APPIUM_SERVER_URL));
-        // uncomment if using Appium 1.x
+        // Appium 1.x
         // DesiredCapabilities capabilities = new DesiredCapabilities();
 
         // Appium 2.x
