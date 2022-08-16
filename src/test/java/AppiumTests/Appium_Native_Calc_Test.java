@@ -2,6 +2,7 @@ package AppiumTests;
 
 import Utilities.Wait;
 import io.appium.java_client.AppiumDriver;
+import io.appium.java_client.android.options.UiAutomator2Options;
 import io.appium.java_client.remote.MobileCapabilityType;
 import io.appium.java_client.service.local.AppiumDriverLocalService;
 import io.appium.java_client.service.local.AppiumServiceBuilder;
@@ -31,8 +32,12 @@ class Appium_Native_Calc_Test {
         System.out.println("Test - " + testInfo.getDisplayName());
         System.out.println(String.format("Create AppiumDriver for - %s",
                                          APPIUM_SERVER_URL));
+        // uncomment if using Appium 1.x
+        // DesiredCapabilities capabilities = new DesiredCapabilities();
 
-        DesiredCapabilities capabilities = new DesiredCapabilities();
+        // Appium 2.x
+        UiAutomator2Options capabilities = new UiAutomator2Options();
+
         capabilities.setCapability(MobileCapabilityType.AUTOMATION_NAME,
                                    "UiAutomator2");
         capabilities.setCapability(MobileCapabilityType.DEVICE_NAME,
@@ -62,8 +67,13 @@ class Appium_Native_Calc_Test {
         AppiumServiceBuilder serviceBuilder = new AppiumServiceBuilder();
         // Use any port, in case the default 4723 is already taken (maybe by another Appium server)
         serviceBuilder.usingAnyFreePort();
-        localAppiumServer = AppiumDriverLocalService.buildService(serviceBuilder)
-                                                    .withBasePath("/wd/hub/");
+        // uncomment if using Appium 1.x
+        // localAppiumServer = AppiumDriverLocalService.buildService(serviceBuilder);
+        //                                            .withBasePath("/wd/hub/");
+
+        // Appium 2.x
+        localAppiumServer = AppiumDriverLocalService.buildService(serviceBuilder);
+
         localAppiumServer.start();
         APPIUM_SERVER_URL = localAppiumServer.getUrl()
                                              .toString();
