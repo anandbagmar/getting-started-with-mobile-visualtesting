@@ -12,6 +12,7 @@ import io.appium.java_client.android.options.UiAutomator2Options;
 import io.appium.java_client.remote.MobileCapabilityType;
 import io.appium.java_client.service.local.AppiumDriverLocalService;
 import io.appium.java_client.service.local.AppiumServiceBuilder;
+import io.appium.java_client.service.local.flags.GeneralServerFlag;
 import org.junit.jupiter.api.*;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -43,13 +44,15 @@ class Appium_Native_Calc_EyesTest {
         AppiumServiceBuilder serviceBuilder = new AppiumServiceBuilder();
         // Use any port, in case the default 4723 is already taken (maybe by another Appium server)
         serviceBuilder.usingAnyFreePort();
+        serviceBuilder.withArgument(GeneralServerFlag.ALLOW_INSECURE, "adb_shell");
+        serviceBuilder.withArgument(GeneralServerFlag.RELAXED_SECURITY);
 
         // Appium 1.x
-        // localAppiumServer = AppiumDriverLocalService.buildService(serviceBuilder)
-        //                                                    .withBasePath("/wd/hub/");
+         localAppiumServer = AppiumDriverLocalService.buildService(serviceBuilder)
+                                                            .withBasePath("/wd/hub/");
 
         // Appium 2.x
-        localAppiumServer = AppiumDriverLocalService.buildService(serviceBuilder);
+//        localAppiumServer = AppiumDriverLocalService.buildService(serviceBuilder);
 
         localAppiumServer.start();
         APPIUM_SERVER_URL = localAppiumServer.getUrl()
