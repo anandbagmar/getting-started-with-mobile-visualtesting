@@ -6,6 +6,7 @@ import com.applitools.eyes.MatchLevel;
 import com.applitools.eyes.StdoutLogHandler;
 import com.applitools.eyes.TestResultsSummary;
 import com.applitools.eyes.appium.Eyes;
+import com.applitools.eyes.appium.Target;
 import com.applitools.eyes.selenium.ClassicRunner;
 import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.android.options.UiAutomator2Options;
@@ -117,12 +118,14 @@ class Appium_Native_Calc_EyesTest {
         eyes.checkWindow("Calculator!");
         driver.findElement(By.id("digit" + 2))
               .click();
+        eyes.check("digit-2-by", Target.region(By.id("digit" + 2)));
         eyes.checkWindow("digit" + 2);
         driver.findElement(By.id("plus"))
               .click();
         eyes.checkWindow("plus");
         driver.findElement(By.id("digit" + 3))
               .click();
+        eyes.check("digit-3-byElement", Target.region(driver.findElement(By.id("digit" + 3))));
         eyes.checkWindow("digit" + 3);
         driver.findElement(By.id("equal"))
               .click();
