@@ -49,11 +49,11 @@ class Appium_Native_Calc_EyesTest {
         serviceBuilder.withArgument(GeneralServerFlag.RELAXED_SECURITY);
 
         // Appium 1.x
-         localAppiumServer = AppiumDriverLocalService.buildService(serviceBuilder)
-                                                            .withBasePath("/wd/hub/");
+//         localAppiumServer = AppiumDriverLocalService.buildService(serviceBuilder)
+//                                                            .withBasePath("/wd/hub/");
 
         // Appium 2.x
-//        localAppiumServer = AppiumDriverLocalService.buildService(serviceBuilder);
+        localAppiumServer = AppiumDriverLocalService.buildService(serviceBuilder);
 
         localAppiumServer.start();
         APPIUM_SERVER_URL = localAppiumServer.getUrl()
@@ -120,7 +120,7 @@ class Appium_Native_Calc_EyesTest {
               .click();
         eyes.check("digit-2-by", Target.region(By.id("digit" + 2)));
         eyes.checkWindow("digit" + 2);
-        driver.findElement(By.id("plus"))
+        driver.findElement(By.id("minus"))
               .click();
         eyes.checkWindow("plus");
         driver.findElement(By.id("digit" + 3))

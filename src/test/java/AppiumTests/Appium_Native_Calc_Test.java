@@ -72,11 +72,11 @@ class Appium_Native_Calc_Test {
         serviceBuilder.withArgument(GeneralServerFlag.RELAXED_SECURITY);
 
         // Appium 1.x
-         localAppiumServer = AppiumDriverLocalService.buildService(serviceBuilder)
-                                                    .withBasePath("/wd/hub/");
+//         localAppiumServer = AppiumDriverLocalService.buildService(serviceBuilder)
+//                                                    .withBasePath("/wd/hub/");
 
         // Appium 2.x
-//        localAppiumServer = AppiumDriverLocalService.buildService(serviceBuilder);
+        localAppiumServer = AppiumDriverLocalService.buildService(serviceBuilder);
 
         localAppiumServer.start();
         APPIUM_SERVER_URL = localAppiumServer.getUrl()
