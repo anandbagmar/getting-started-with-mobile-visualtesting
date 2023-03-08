@@ -10,13 +10,12 @@ import io.appium.java_client.service.local.flags.GeneralServerFlag;
 import org.junit.jupiter.api.*;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.remote.DesiredCapabilities;
 
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-class Appium_Native_Calc_Test {
+class CalcTest {
 
     private static AppiumDriverLocalService localAppiumServer;
     private AppiumDriver driver;

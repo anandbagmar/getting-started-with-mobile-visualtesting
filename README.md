@@ -14,9 +14,9 @@ with
 
 ## Samples included:
 
-> Appium_Native_Calc_Test -> basic appium test, *without* Applitools
+> CalcTest -> basic appium test, *without* Applitools
  
-> Appium_Native_Cals_EyesTest -> appium test, *with* Applitools integrated
+> EyesTest -> appium test, *with* Applitools integrated
 
 ## Running the tests
 

@@ -22,10 +22,10 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-class Appium_Native_Calc_EyesTest {
+class EyesTest {
 
     private static BatchInfo batch;
-    private static final String className = Appium_Native_Calc_EyesTest.class.getSimpleName();
+    private static final String className = EyesTest.class.getSimpleName();
     private static ClassicRunner classicRunner;
     private AppiumDriver driver;
     private Eyes eyes;
