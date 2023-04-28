@@ -16,7 +16,8 @@ with
 
 > CalcTest -> basic appium test, *without* Applitools
  
-> EyesTest -> appium test, *with* Applitools integrated
+> FirstEyesTest -> appium test, *with* Applitools integrated
+> SecondEyesTest -> appium test, *with* Applitools integrated (same as FirstEyesTest, but helpful to demonstrate multiple tests running)
 
 ## Running the tests
 
