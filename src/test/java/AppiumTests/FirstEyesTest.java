@@ -4,7 +4,7 @@ import com.applitools.eyes.appium.Target;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
 
-class FirstEyesTest extends Hooks {
+public class FirstEyesTest extends Hooks {
     @Test
     public void appiumTest1() {
         eyes.checkWindow("Calculator!");

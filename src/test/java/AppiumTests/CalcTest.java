@@ -15,15 +15,15 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-class CalcTest {
+public class CalcTest {
 
     private static AppiumDriverLocalService localAppiumServer;
     private AppiumDriver driver;
-    private static String APPIUM_SERVER_URL = "NOT_SET";
+    private static String APPIUM_SERVER_URL = "http://localhost:4723/wd/hub/";
 
     @BeforeAll
     static void beforeAll() {
-        startAppiumServer();
+        //startAppiumServer();
     }
 
     @BeforeEach

@@ -38,7 +38,7 @@ public class Hooks {
     public static void beforeAll() {
         String batchName = userName + "-" + className;
         System.out.println("BeforeAll");
-        startAppiumServer();
+//        startAppiumServer();
         if(null == batch) {
             System.out.println("Batch is null. Instantiate");
             batch = new BatchInfo(batchName);

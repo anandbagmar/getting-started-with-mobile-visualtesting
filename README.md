@@ -10,7 +10,7 @@ with
 > eyes.setApiKey("<replace_me>");
 
 * If running Appium tests, you need to connect your device / start emulator
-* Start appium on the local machine
+* Start appium on the local machine in a separate terminal tab using `appium` command
 
 ## Samples included:
 
@@ -21,6 +21,7 @@ with
 
 ## Running the tests
 
-You can run the test directly from any IDE, OR, you can run the test from the command line using the command:
-
-> mvn clean test -Dtest=<test_name>
+1. You can run the test directly from any IDE, OR, you can run the test from the command line using the command:
+   > `mvn clean test -Dtest=<test_class_name>`
+2. Using `main` method
+   > `mvn clean compile test-compile exec:java generate-test-resources`
