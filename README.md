@@ -10,7 +10,9 @@ with
 > eyes.setApiKey("<replace_me>");
 
 * If running Appium tests, you need to connect your device / start emulator
-* Start appium on the local machine
+* Install appium using the provided package.json
+  * `npm install`
+* The test will automatically start/stop the appium server
 
 ## Samples included:
 
