@@ -60,6 +60,8 @@ public class Hooks {
         AppiumServiceBuilder serviceBuilder = new AppiumServiceBuilder();
         // Use any port, in case the default 4723 is already taken (maybe by another Appium server)
         serviceBuilder.usingAnyFreePort();
+        serviceBuilder.withAppiumJS(new File("./node_modules/appium/build/lib/main.js"));
+        serviceBuilder.withLogFile(new File("./target/appium_logs.txt"));
         serviceBuilder.withArgument(GeneralServerFlag.ALLOW_INSECURE, "adb_shell");
         serviceBuilder.withArgument(GeneralServerFlag.RELAXED_SECURITY);
 
