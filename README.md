@@ -21,6 +21,9 @@ with
 > FirstEyesTest -> appium test, *with* Applitools integrated
 > SecondEyesTest -> appium test, *with* Applitools integrated (same as FirstEyesTest, but helpful to demonstrate multiple tests running)
 
+## Installing appium and related drivers & plugins
+`npm install`
+
 ## Running the tests
 
 You can run the test directly from any IDE, OR, you can run the test from the command line using the command:
