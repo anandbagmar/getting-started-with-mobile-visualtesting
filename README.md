@@ -106,8 +106,8 @@ select the `AndroidCalculator.apk` file and drag it onto the emulated device's m
 screen.  Once you drop that file onto the emulator, you should see a new icon named 
 Calculator appear among the other Android application icons installed on the device.
 
-You don't need to launch the example app within the emulator before running your first
-test.  The tests will start and stop the example app as needed.
+You don't need to start, nor launch the example app within the emulator before running your first
+test.  The tests will automatically install, start and stop the example app as needed.
 
 ### Start the Appium service
 
