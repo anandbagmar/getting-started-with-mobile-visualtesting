@@ -73,7 +73,7 @@ There are two ways to
    it explicitly in your test code.
   
 2. You can hard-code your API key in the test source code by replacing 
-   [line 105 of the Hooks.java](src/test/java/AppiumTests/Hooks.java#L105) source file
+   [line 105 of the io.samples.Hooks.java](src/test/java/android/io.samples.Hooks.java#L105) source file
 
 >> `eyes.setApiKey(System.getenv("APPLITOOLS_API_KEY"));`
 
@@ -132,16 +132,16 @@ mvn clean test -Dtest=<test_name>
 
 ## Example Test Source Files
 
-1. [Hooks.java](src/test/java/AppiumTests/Hooks.java)
-> This is not a test class, but the other tests classes extend the Hooks class to inherit its
+1. [io.samples.Hooks.java](src/test/java/android/io.samples.Hooks.java)
+> This is not a test class, but the other tests classes extend the io.samples.Hooks class to inherit its
 [JUnit lifecycle methods](https://junit.org/junit5/docs/current/user-guide/#writing-tests-classes-and-methods).
 
-1. [CalcTest.java](src/test/java/AppiumTests/CalcTest.java)
+1. [CalcTest.java](src/test/java/android/CalcTest.java)
 > A basic Appium test, *without* Applitools Eyes screen checks.
  
-1. [FirstEyesTest.java](src/test/java/AppiumTests/FirstEyesTest.java)
+1. [FirstEyesTest.java](src/test/java/android/FirstEyesTest.java)
 > A basic Appium test, *with* Applitools Eyes screen checks.
 
-1. [SecondEyesTest.java](src/test/java/AppiumTests/SecondEyesTest.java) 
+1. [SecondEyesTest.java](src/test/java/android/SecondEyesTest.java) 
 > This test class is the same as the FirstEyesTest.  It's useful to demonstrate running multiple tests.
 

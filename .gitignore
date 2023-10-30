@@ -24,5 +24,5 @@ hs_err_pid*
 /.idea/
 
 target
-sampleApps/*.apk
+sampleApps/
 node_modules
