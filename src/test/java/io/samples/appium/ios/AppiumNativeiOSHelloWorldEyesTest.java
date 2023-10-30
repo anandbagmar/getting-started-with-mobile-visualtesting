@@ -2,13 +2,16 @@ package io.samples.appium.ios;
 
 import com.applitools.eyes.appium.Target;
 import io.appium.java_client.AppiumBy;
+import io.samples.Hooks;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
 
-class AppiumNativeiOSHelloWorldEyesTest extends IOSHooks {
+class AppiumNativeiOSHelloWorldEyesTest extends Hooks {
     AppiumNativeiOSHelloWorldEyesTest() {
         IS_EYES_ENABLED = true;
+        PLATFORM_NAME = "ios";
+        IS_NATIVE = true;
     }
 
     @Test

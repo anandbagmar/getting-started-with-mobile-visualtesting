@@ -1,16 +1,18 @@
 package io.samples.appium.ios;
 
 import com.applitools.eyes.appium.Target;
+import io.samples.Hooks;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
 
 import static io.samples.Wait.waitFor;
 
-class WebiOSHelloWorldEyesTest extends IOSHooks {
+class WebiOSHelloWorldEyesTest extends Hooks {
     private WebiOSHelloWorldEyesTest() {
-        IS_NATIVE = false;
         IS_EYES_ENABLED = true;
+        PLATFORM_NAME = "ios";
+        IS_NATIVE = false;
     }
 
     @Test

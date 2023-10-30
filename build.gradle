@@ -1,0 +1,44 @@
+buildscript {
+    ext {
+        gradleVersion = '8.2'
+    }
+    repositories {
+        mavenLocal()
+    }
+}
+
+plugins {
+    id "java"
+    id "idea"
+}
+version '0.0.1'
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+}
+
+compileJava { options.encoding = "UTF-8" }
+
+dependencies {
+    implementation 'com.applitools:eyes-appium-java5:5.64.8'
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.10.0'
+    implementation 'io.appium:java-client:8.5.1'
+}
+
+wrapper {
+    gradleVersion = project.gradleVersion // version from gradle.properties
+}
+
+test {
+    useJUnitPlatform()
+
+    println("Debug mode: " + System.getProperty('debug', 'false'))
+    // attach debugger
+    // example: ./gradlew run -Ddebug=true
+    if (System.getProperty('debug', 'false') == 'true') {
+        println("In debug mode")
+        jvmArgs '-Xdebug', '-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,' +
+                'address=*:5005'
+    }
+}

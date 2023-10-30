@@ -26,3 +26,7 @@ hs_err_pid*
 target
 sampleApps/
 node_modules
+.gradle
+build/
+target/
+

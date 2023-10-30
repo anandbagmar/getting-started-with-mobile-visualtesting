@@ -51,10 +51,10 @@ public class Hooks {
         System.out.println("Create AppiumRunner");
         appiumRunner = new AppiumRunner();
         appiumRunner.setDontCloseBatches(true);
-        System.out.printf("batch name: %s%n", batch.getName());
-        System.out.printf("batch sequenceName: %s%n", batch.getSequenceName());
-        System.out.printf("batch startedAt: %s%n", batch.getStartedAt());
-        System.out.printf("batch BatchId: %s%n", batch.getId());
+        System.out.printf("Batch name: %s%n", batch.getName());
+        System.out.printf("Batch sequenceName: %s%n", batch.getSequenceName());
+        System.out.printf("Batch startedAt: %s%n", batch.getStartedAt());
+        System.out.printf("Batch BatchId: %s%n", batch.getId());
     }
 
     @AfterAll

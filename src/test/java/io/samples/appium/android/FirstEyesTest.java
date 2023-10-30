@@ -1,12 +1,15 @@
 package io.samples.appium.android;
 
 import com.applitools.eyes.appium.Target;
+import io.samples.Hooks;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
 
-class FirstEyesTest extends AndroidHooks {
+class FirstEyesTest extends Hooks {
     private FirstEyesTest() {
         IS_EYES_ENABLED = true;
+        IS_NATIVE = true;
+        PLATFORM_NAME = "android";
     }
 
     @Test

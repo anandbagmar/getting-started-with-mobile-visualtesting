@@ -1,10 +1,16 @@
 package io.samples.appium.android;
 
+import io.samples.Hooks;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
 
-class CalcTest extends AndroidHooks {
+class CalcTest extends Hooks {
+    CalcTest() {
+        IS_EYES_ENABLED = false;
+        IS_NATIVE = true;
+        PLATFORM_NAME = "android";
+    }
 
     @Test
     void calcTest() {

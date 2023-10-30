@@ -1,14 +1,17 @@
 package io.samples.appium.android;
 
+import io.samples.Hooks;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
 
 import static io.samples.Wait.waitFor;
 
-class WebAndroidHelloWorldTest extends AndroidHooks {
+class WebAndroidHelloWorldTest extends Hooks {
     private WebAndroidHelloWorldTest() {
         IS_NATIVE = false;
+        IS_EYES_ENABLED = false;
+        PLATFORM_NAME = "android";
     }
 
     @Test
