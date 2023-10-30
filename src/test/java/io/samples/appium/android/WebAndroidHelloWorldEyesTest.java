@@ -1,6 +1,8 @@
 package io.samples.appium.android;
 
-import io.samples.Hooks;
+import com.applitools.eyes.appium.Eyes;
+import com.applitools.eyes.appium.Target;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
 
@@ -8,43 +10,25 @@ import java.util.Date;
 
 import static io.samples.Wait.waitFor;
 
-class WebAndroidHelloWorldTest extends AndroidHooks {
-    private WebAndroidHelloWorldTest() {
+class WebAndroidHelloWorldEyesTest extends AndroidHooks {
+    private WebAndroidHelloWorldEyesTest() {
         IS_NATIVE = false;
+        IS_EYES_ENABLED = true;
     }
 
     @Test
-    void runAndroidWebTest() throws InterruptedException {
-        System.out.println("Start time: " + new Date());
-        waitFor(3);
+    void runAndroidWebTest() {
         driver.get("https://applitools.com/helloworld");
-        for (int stepNumber = 0; stepNumber < 5; stepNumber++) {
-            driver.findElement(By.linkText("?diff1")).click();
+        waitFor(2);
+        eyes.checkWindow("App launched");
+        for (int stepNumber = 0; stepNumber < 2; stepNumber++) {
+            By linkText = By.linkText("?diff1");
+            driver.findElement(linkText).click();
+            eyes.check("step-" + stepNumber, Target.region(linkText).layout());
             waitFor(1);
         }
-
         driver.findElement(By.tagName("button")).click();
-        driver.quit();
-
-        System.out.println("End time: " + new Date());
+        eyes.check("Click Me", Target.window().layout());
+        Assertions.assertTrue(true, "Test completed. Assertions will be done by Applitools");
     }
-
-
-//    private AppiumDriver createAppiumDriver() {
-//        // Appium 1.x
-//        // DesiredCapabilities dc = new DesiredCapabilities();
-//
-//        // Appium 2.x
-//        XCUITestOptions dc = new XCUITestOptions();
-//
-//        dc.setCapability(MobileCapabilityType.PLATFORM_NAME, "iOS");
-//        dc.setCapability(MobileCapabilityType.AUTOMATION_NAME, "XCUITest");
-//        dc.setCapability(MobileCapabilityType.PLATFORM_VERSION, PLATFORM_VERSION);
-//        dc.setCapability(MobileCapabilityType.DEVICE_NAME, DEVICE_NAME);
-//        dc.setCapability(MobileCapabilityType.UDID, UDID);
-//        dc.setCapability(MobileCapabilityType.BROWSER_NAME, "safari");
-//        dc.setCapability(MobileCapabilityType.APP, "io.appium.SafariLauncher");
-//
-//        return new AppiumDriver(getAppiumServerUrl(), dc);
-//    }
 }

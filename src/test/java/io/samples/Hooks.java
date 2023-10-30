@@ -117,17 +117,19 @@ public class Hooks {
         xcuiTestOptions.setCapability(MobileCapabilityType.DEVICE_NAME, IOS_DEVICE_NAME);
         xcuiTestOptions.setCapability(MobileCapabilityType.UDID, IOS_UDID);
         xcuiTestOptions.setCapability(MobileCapabilityType.FULL_RESET, false);
-//        xcuiTestOptions.setCapability(MobileCapabilityType.NO_RESET, false);
+        // xcuiTestOptions.setCapability(MobileCapabilityType.NO_RESET, false);
 
         xcuiTestOptions.setCapability(IOSMobileCapabilityType.SHOW_XCODE_LOG, true);
-//        xcuiTestOptions.setCapability(IOSMobileCapabilityType.SHOW_IOS_LOG, true);
+        // xcuiTestOptions.setCapability(IOSMobileCapabilityType.SHOW_IOS_LOG, true);
         xcuiTestOptions.setCapability(MobileCapabilityType.PRINT_PAGE_SOURCE_ON_FIND_FAILURE, true);
+        xcuiTestOptions.setCapability(IOSMobileCapabilityType.AUTO_DISMISS_ALERTS, true);
         if (IS_NATIVE) {
-//            xcuiTestOptions.setCapability("app", System.getProperty("user.dir") + "/sampleApps/HelloWorldiOS.app");
         xcuiTestOptions.setCapability("app", System.getProperty("user.dir") + "/sampleApps/eyes-ios-hello-world.zip");
         } else {
-//            xcuiTestOptions.setCapability(IOSMobileCapabilityType.BROWSER_NAME, "safari");
-            xcuiTestOptions.setCapability(MobileCapabilityType.APP, "io.appium.SafariLauncher");
+            xcuiTestOptions.setCapability(IOSMobileCapabilityType.BROWSER_NAME, "safari");
+            xcuiTestOptions.setCapability(IOSMobileCapabilityType.SAFARI_INITIAL_URL, "https://google.com");
+
+            // xcuiTestOptions.setCapability(MobileCapabilityType.APP, "io.appium.SafariLauncher");
         }
 
         try {
