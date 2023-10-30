@@ -1,12 +1,8 @@
 package io.samples;
 
-import com.applitools.eyes.BatchInfo;
-import com.applitools.eyes.MatchLevel;
-import com.applitools.eyes.StdoutLogHandler;
-import com.applitools.eyes.TestResultsSummary;
+import com.applitools.eyes.*;
 import com.applitools.eyes.appium.AppiumRunner;
 import com.applitools.eyes.appium.Eyes;
-import com.applitools.eyes.selenium.ClassicRunner;
 import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.android.options.UiAutomator2Options;
 import io.appium.java_client.ios.options.XCUITestOptions;
@@ -24,6 +20,7 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Date;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Hooks {
 
@@ -91,10 +88,6 @@ public class Hooks {
         serviceBuilder.withArgument(GeneralServerFlag.ALLOW_INSECURE, "adb_shell");
         serviceBuilder.withArgument(GeneralServerFlag.RELAXED_SECURITY);
 
-        // Appium 1.x
-        // localAppiumServer = AppiumDriverLocalService.buildService(serviceBuilder)
-        //     .withBasePath("/wd/hub/");
-
         // Appium 2.x
         localAppiumServer = AppiumDriverLocalService.buildService(serviceBuilder);
 
@@ -107,9 +100,6 @@ public class Hooks {
     void setUpiOS(TestInfo testInfo) {
         System.out.println("BeforeEach: Test - " + testInfo.getDisplayName());
         System.out.printf("Create AppiumDriver for iOS test - %s%n", APPIUM_SERVER_URL);
-
-        // Appium 1.x
-        // DesiredCapabilities xcuiTestOptions = new DesiredCapabilities();
 
         // Appium 2.x
         XCUITestOptions xcuiTestOptions = new XCUITestOptions();
@@ -128,8 +118,6 @@ public class Hooks {
         } else {
             xcuiTestOptions.setCapability(IOSMobileCapabilityType.BROWSER_NAME, "safari");
             xcuiTestOptions.setCapability(IOSMobileCapabilityType.SAFARI_INITIAL_URL, "https://google.com");
-
-            // xcuiTestOptions.setCapability(MobileCapabilityType.APP, "io.appium.SafariLauncher");
         }
 
         try {
@@ -145,9 +133,6 @@ public class Hooks {
     void setUpAndroid(TestInfo testInfo) {
         System.out.println("BeforeEach: Test - " + testInfo.getDisplayName());
         System.out.println(String.format("Create AppiumDriver for android test - %s", APPIUM_SERVER_URL));
-        // Appium 1.x
-        // DesiredCapabilities uiAutomator2Options = new DesiredCapabilities();
-
         // Appium 2.x
         UiAutomator2Options uiAutomator2Options = new UiAutomator2Options();
 
@@ -212,14 +197,21 @@ public class Hooks {
     @AfterEach
     void tearDown(TestInfo testInfo) {
         System.out.println("AfterEach: Test - " + testInfo.getDisplayName());
+        AtomicBoolean isPass = new AtomicBoolean(true);
         if (IS_EYES_ENABLED) {
             eyes.closeAsync();
             TestResultsSummary allTestResults = appiumRunner.getAllTestResults(false);
-            System.out.println(allTestResults);
+            allTestResults.forEach(testResultContainer -> {
+                System.out.printf("Test: %s\n%s%n", testResultContainer.getTestResults().getName(), testResultContainer);
+                TestResultsStatus testResultsStatus = testResultContainer.getTestResults().getStatus();
+                if (testResultsStatus.equals(TestResultsStatus.Failed) || testResultsStatus.equals(TestResultsStatus.Unresolved)) {
+                    isPass.set(false);
+                }
+            });
         }
         if (null != driver) {
-            driver.close();
             driver.quit();
         }
+        Assertions.assertTrue(isPass.get(), "Visual differences found.");
     }
 }

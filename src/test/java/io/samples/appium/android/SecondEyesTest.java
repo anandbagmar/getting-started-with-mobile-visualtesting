@@ -6,7 +6,7 @@ import org.openqa.selenium.By;
 
 class SecondEyesTest extends AndroidHooks {
     private SecondEyesTest() {
-        IS_EYES_ENABLED=true;
+        IS_EYES_ENABLED = true;
     }
 
     @Test

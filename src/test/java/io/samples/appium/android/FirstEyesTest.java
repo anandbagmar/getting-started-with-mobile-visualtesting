@@ -6,8 +6,9 @@ import org.openqa.selenium.By;
 
 class FirstEyesTest extends AndroidHooks {
     private FirstEyesTest() {
-        IS_EYES_ENABLED=true;
+        IS_EYES_ENABLED = true;
     }
+
     @Test
     void appiumTest1() {
         System.out.println("Starting test");

@@ -1,12 +1,9 @@
 package io.samples.appium.android;
 
-import com.applitools.eyes.appium.Eyes;
 import com.applitools.eyes.appium.Target;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
-
-import java.util.Date;
 
 import static io.samples.Wait.waitFor;
 

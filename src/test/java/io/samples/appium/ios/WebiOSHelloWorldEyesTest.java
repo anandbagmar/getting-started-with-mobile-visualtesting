@@ -10,6 +10,7 @@ import static io.samples.Wait.waitFor;
 class WebiOSHelloWorldEyesTest extends IOSHooks {
     private WebiOSHelloWorldEyesTest() {
         IS_NATIVE = false;
+        IS_EYES_ENABLED = true;
     }
 
     @Test
@@ -20,6 +21,7 @@ class WebiOSHelloWorldEyesTest extends IOSHooks {
         for (int stepNumber = 0; stepNumber < 2; stepNumber++) {
             By linkText = By.linkText("?diff1");
             driver.findElement(linkText).click();
+            waitFor(1);
             eyes.check("step-" + stepNumber, Target.region(linkText).layout());
             waitFor(1);
         }
