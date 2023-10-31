@@ -37,8 +37,10 @@ public class Hooks {
     protected static boolean IS_NATIVE = true;
     protected static String PLATFORM_NAME = "android";
 
-    private static final String IOS_UDID = "218E1E36-2A38-4FE5-9F83-B0D0247D2F90";
-    private static final String IOS_DEVICE_NAME = "iPhone 15";
+    private static final String IOS_UDID = "3B36710C-C6CE-4585-9225-9A50BCB6A634";
+    private static final String IPHONE_15_PRO_IOS_UDID = "3B36710C-C6CE-4585-9225-9A50BCB6A634";
+//    private static final String IPHONE_15_IOS_UDID = "218E1E36-2A38-4FE5-9F83-B0D0247D2F90";
+    private static final String IOS_DEVICE_NAME = "iPhone 15 Pro";
     private static final String IOS_PLATFORM_VERSION = "17.0";
 
 

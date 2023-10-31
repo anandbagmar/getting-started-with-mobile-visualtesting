@@ -17,6 +17,7 @@ class AppiumNativeiOSHelloWorldEyesTest extends Hooks {
     @Test
     void runIOSNativeAppTest() {
         eyes.checkWindow("App launched");
+        eyes.check("App launched", Target.window());
         driver.findElement(AppiumBy.accessibilityId("Make the number below random.")).click();
         driver.findElement(AppiumBy.accessibilityId("MakeRandomNumberCheckbox")).click();
         eyes.check("MakeRandomNumberCheckbox", Target.region(AppiumBy.accessibilityId("MakeRandomNumberCheckbox")));

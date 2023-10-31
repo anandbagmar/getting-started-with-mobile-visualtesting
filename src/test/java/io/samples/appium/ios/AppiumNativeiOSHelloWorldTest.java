@@ -15,14 +15,10 @@ class AppiumNativeiOSHelloWorldTest extends Hooks {
 
     @Test
     void runIOSNativeAppTest() {
-        driver.findElement(AppiumBy.accessibilityId("Make the number below random."))
-                .click();
-        driver.findElement(AppiumBy.accessibilityId("MakeRandomNumberCheckbox"))
-                .click();
-        driver.findElement(AppiumBy.accessibilityId("SimulateDiffsCheckbox"))
-                .click();
-        driver.findElement(By.xpath("//XCUIElementTypeStaticText[@name=\"Click me!\"]"))
-                .click();
+        driver.findElement(AppiumBy.accessibilityId("Make the number below random.")).click();
+        driver.findElement(AppiumBy.accessibilityId("MakeRandomNumberCheckbox")).click();
+        driver.findElement(AppiumBy.accessibilityId("SimulateDiffsCheckbox")).click();
+        driver.findElement(By.xpath("//XCUIElementTypeStaticText[@name=\"Click me!\"]")).click();
         Assertions.assertTrue(true, "Test completed. Assertions will be done by Applitools");
     }
 }
