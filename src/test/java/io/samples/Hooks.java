@@ -19,6 +19,7 @@ import org.openqa.selenium.WebElement;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.time.Duration;
 import java.util.Date;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -37,11 +38,18 @@ public class Hooks {
     protected static boolean IS_NATIVE = true;
     protected static String PLATFORM_NAME = "android";
 
-    private static final String IOS_UDID = "3B36710C-C6CE-4585-9225-9A50BCB6A634";
+    private static final String IPHONE_6S_IOS_DEVICE_NAME = "iPhone";
+    private static final String IPHONE_6S_IOS_PLATFORM_VERSION = "17.0";
+    private static final String IPHONE_6S_IOS_UDID = "auto";
+    private static final String IPHONE_15_IOS_DEVICE_NAME = "iPhone 15";
+    private static final String IPHONE_15_IOS_PLATFORM_VERSION = "17.0";
+    private static final String IPHONE_15_IOS_UDID = "218E1E36-2A38-4FE5-9F83-B0D0247D2F90";
+    private static final String IPHONE_15_PRO_IOS_DEVICE_NAME = "iPhone 15 Pro";
+    private static final String IPHONE_15_PRO_IOS_PLATFORM_VERSION = "17.0";
     private static final String IPHONE_15_PRO_IOS_UDID = "3B36710C-C6CE-4585-9225-9A50BCB6A634";
-//    private static final String IPHONE_15_IOS_UDID = "218E1E36-2A38-4FE5-9F83-B0D0247D2F90";
-    private static final String IOS_DEVICE_NAME = "iPhone 15 Pro";
-    private static final String IOS_PLATFORM_VERSION = "17.0";
+    private static final String IOS_UDID = IPHONE_6S_IOS_UDID;
+    private static final String IOS_DEVICE_NAME = IPHONE_6S_IOS_DEVICE_NAME;
+    private static final String IOS_PLATFORM_VERSION = IPHONE_6S_IOS_PLATFORM_VERSION;
 
 
     @BeforeAll
@@ -63,11 +71,16 @@ public class Hooks {
     static void afterAll() {
         System.out.printf("AfterAll: Stopping the local Appium server running on: '%s'%n",
                 APPIUM_SERVER_URL);
+        if (null!=appiumRunner) {
+            appiumRunner.close();
+        }
+        if (null!=batch) {
+            batch.setCompleted(true);
+        }
         if (null != localAppiumServer) {
             localAppiumServer.stop();
             System.out.printf("Is Appium server running? %s%n", localAppiumServer.isRunning());
         }
-        batch.setCompleted(true);
     }
 
     @BeforeEach
@@ -80,8 +93,29 @@ public class Hooks {
         }
     }
 
+    @AfterEach
+    void tearDown(TestInfo testInfo) {
+        System.out.println("AfterEach: Test - " + testInfo.getDisplayName());
+        AtomicBoolean isPass = new AtomicBoolean(true);
+        if (IS_EYES_ENABLED) {
+            eyes.closeAsync();
+            TestResultsSummary allTestResults = appiumRunner.getAllTestResults(false);
+            allTestResults.forEach(testResultContainer -> {
+                System.out.printf("Test: %s\n%s%n", testResultContainer.getTestResults().getName(), testResultContainer);
+                TestResultsStatus testResultsStatus = testResultContainer.getTestResults().getStatus();
+                if (testResultsStatus.equals(TestResultsStatus.Failed) || testResultsStatus.equals(TestResultsStatus.Unresolved)) {
+                    isPass.set(false);
+                }
+            });
+        }
+        if (null != driver) {
+            driver.quit();
+        }
+        Assertions.assertTrue(isPass.get(), "Visual differences found.");
+    }
+
     private static void startAppiumServer() {
-        System.out.println(String.format("Start local Appium server"));
+        System.out.println("Start local Appium server");
         AppiumServiceBuilder serviceBuilder = new AppiumServiceBuilder();
         // Use any port, in case the default 4723 is already taken (maybe by another Appium server)
         serviceBuilder.usingAnyFreePort();
@@ -95,8 +129,8 @@ public class Hooks {
 
         localAppiumServer.start();
         APPIUM_SERVER_URL = localAppiumServer.getUrl().toString();
-        System.out.println(String.format("Appium server started on url: '%s'",
-                localAppiumServer.getUrl().toString()));
+        System.out.printf("Appium server started on url: '%s'%n",
+                localAppiumServer.getUrl().toString());
     }
 
     void setUpiOS(TestInfo testInfo) {
@@ -134,7 +168,7 @@ public class Hooks {
 
     void setUpAndroid(TestInfo testInfo) {
         System.out.println("BeforeEach: Test - " + testInfo.getDisplayName());
-        System.out.println(String.format("Create AppiumDriver for android test - %s", APPIUM_SERVER_URL));
+        System.out.printf("Create AppiumDriver for android test - %s%n", APPIUM_SERVER_URL);
         // Appium 2.x
         UiAutomator2Options uiAutomator2Options = new UiAutomator2Options();
 
@@ -183,6 +217,7 @@ public class Hooks {
 
     private void handleUpgradePopup() {
         Wait.waitFor(1);
+        System.out.println("Handle upgrade popup");
         WebElement upgradeAppNotificationElement = (WebElement) driver.findElement(
                 By.id("android:id/button1"));
         if (null != upgradeAppNotificationElement) {
@@ -194,26 +229,5 @@ public class Hooks {
             gotItElement.click();
             Wait.waitFor(1);
         }
-    }
-
-    @AfterEach
-    void tearDown(TestInfo testInfo) {
-        System.out.println("AfterEach: Test - " + testInfo.getDisplayName());
-        AtomicBoolean isPass = new AtomicBoolean(true);
-        if (IS_EYES_ENABLED) {
-            eyes.closeAsync();
-            TestResultsSummary allTestResults = appiumRunner.getAllTestResults(false);
-            allTestResults.forEach(testResultContainer -> {
-                System.out.printf("Test: %s\n%s%n", testResultContainer.getTestResults().getName(), testResultContainer);
-                TestResultsStatus testResultsStatus = testResultContainer.getTestResults().getStatus();
-                if (testResultsStatus.equals(TestResultsStatus.Failed) || testResultsStatus.equals(TestResultsStatus.Unresolved)) {
-                    isPass.set(false);
-                }
-            });
-        }
-        if (null != driver) {
-            driver.quit();
-        }
-        Assertions.assertTrue(isPass.get(), "Visual differences found.");
     }
 }
