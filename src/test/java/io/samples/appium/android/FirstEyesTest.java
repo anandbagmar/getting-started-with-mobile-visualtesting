@@ -20,14 +20,7 @@ class FirstEyesTest extends Hooks {
         eyes.check("digit-1-by", Target.region(By.id("digit" + 1)));
         eyes.checkWindow("digit" + 2);
         driver.findElement(By.id("minus")).click();
-//        eyes.checkWindow("plus");
-//        driver.findElement(By.id("digit" + 3))
-//              .click();
-//        eyes.check("digit-3-byElement", Target.region(driver.findElement(By.id("digit" + 3))));
-//        eyes.checkWindow("digit" + 3);
-//        driver.findElement(By.id("equal"))
-//              .click();
-//        eyes.checkWindow("Calc works!");
+        eyes.checkWindow("minus");
     }
 
     @Test
