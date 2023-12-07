@@ -13,13 +13,13 @@ class CalcTest extends Hooks {
     }
 
     @Test
-    void calcTest() {
+    void calculatorTest() {
         int p1 = 3;
         int p2 = 5;
-        driver.findElement(By.id("digit" + p1)).click();
-        driver.findElement(By.id("plus")).click();
-        driver.findElement(By.id("digit" + p2)).click();
-        driver.findElement(By.id("equal")).click();
+        driver.findElement(By.id("digit_" + p1)).click();
+        driver.findElement(By.id("op_add")).click();
+        driver.findElement(By.id("digit_" + p2)).click();
+        driver.findElement(By.id("eq")).click();
         Assertions.assertTrue(true, "Test completed. Assertions will be done by Applitools");
     }
 }

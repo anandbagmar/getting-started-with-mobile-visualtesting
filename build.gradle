@@ -23,7 +23,7 @@ compileJava { options.encoding = "UTF-8" }
 dependencies {
     implementation 'com.applitools:eyes-appium-java5:5.66.0'
     testImplementation 'org.junit.jupiter:junit-jupiter:5.10.0'
-    implementation 'io.appium:java-client:8.5.1'
+    implementation 'io.appium:java-client:9.0.0'
 }
 
 wrapper {

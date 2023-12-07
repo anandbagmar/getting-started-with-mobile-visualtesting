@@ -6,15 +6,10 @@ import com.applitools.eyes.appium.Eyes;
 import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.android.options.UiAutomator2Options;
 import io.appium.java_client.ios.options.XCUITestOptions;
-import io.appium.java_client.remote.AndroidMobileCapabilityType;
-import io.appium.java_client.remote.IOSMobileCapabilityType;
-import io.appium.java_client.remote.MobileCapabilityType;
 import io.appium.java_client.service.local.AppiumDriverLocalService;
 import io.appium.java_client.service.local.AppiumServiceBuilder;
 import io.appium.java_client.service.local.flags.GeneralServerFlag;
 import org.junit.jupiter.api.*;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
 
 import java.io.File;
 import java.net.MalformedURLException;
@@ -62,8 +57,7 @@ public class Hooks {
         appiumRunner = new AppiumRunner();
         appiumRunner.setDontCloseBatches(true);
         System.out.printf("Batch name: %s%n", batch.getName());
-        System.out.printf("Batch sequenceName: %s%n", batch.getSequenceName());
-        System.out.printf("Batch startedAt: %s%n", batch.getStartedAt());
+        System.out.printf("Batch startedAt: %s%n", batch.getStartedAt().getTime());
         System.out.printf("Batch BatchId: %s%n", batch.getId());
     }
 
@@ -139,21 +133,21 @@ public class Hooks {
 
         // Appium 2.x
         XCUITestOptions xcuiTestOptions = new XCUITestOptions();
-        xcuiTestOptions.setCapability(MobileCapabilityType.PLATFORM_VERSION, IOS_PLATFORM_VERSION);
-        xcuiTestOptions.setCapability(MobileCapabilityType.DEVICE_NAME, IOS_DEVICE_NAME);
-        xcuiTestOptions.setCapability(MobileCapabilityType.UDID, IOS_UDID);
-        xcuiTestOptions.setCapability(MobileCapabilityType.FULL_RESET, false);
-        // xcuiTestOptions.setCapability(MobileCapabilityType.NO_RESET, false);
+        xcuiTestOptions.setCapability(XCUITestOptions.PLATFORM_VERSION_OPTION, IOS_PLATFORM_VERSION);
+        xcuiTestOptions.setCapability(XCUITestOptions.DEVICE_NAME_OPTION, IOS_DEVICE_NAME);
+        xcuiTestOptions.setCapability(XCUITestOptions.UDID_OPTION, IOS_UDID);
+        xcuiTestOptions.setCapability(XCUITestOptions.FULL_RESET_OPTION, false);
+//        xcuiTestOptions.setCapability(XCUITestOptions.NO_RESET_OPTION, false);
 
-        xcuiTestOptions.setCapability(IOSMobileCapabilityType.SHOW_XCODE_LOG, true);
-        // xcuiTestOptions.setCapability(IOSMobileCapabilityType.SHOW_IOS_LOG, true);
-        xcuiTestOptions.setCapability(MobileCapabilityType.PRINT_PAGE_SOURCE_ON_FIND_FAILURE, true);
-        xcuiTestOptions.setCapability(IOSMobileCapabilityType.AUTO_DISMISS_ALERTS, true);
+        xcuiTestOptions.setCapability(XCUITestOptions.SHOW_XCODE_LOG_OPTION, true);
+//         xcuiTestOptions.setCapability(XCUITestOptions.SHOW_IOS_LOG_OPTION, true);
+        xcuiTestOptions.setCapability(XCUITestOptions.PRINT_PAGE_SOURCE_ON_FIND_FAILURE_OPTION, true);
+        xcuiTestOptions.setCapability(XCUITestOptions.AUTO_ACCEPT_ALERTS_OPTION, true);
         if (IS_NATIVE) {
         xcuiTestOptions.setCapability("app", System.getProperty("user.dir") + "/sampleApps/eyes-ios-hello-world.zip");
         } else {
-            xcuiTestOptions.setCapability(IOSMobileCapabilityType.BROWSER_NAME, "safari");
-            xcuiTestOptions.setCapability(IOSMobileCapabilityType.SAFARI_INITIAL_URL, "https://google.com");
+            xcuiTestOptions.setCapability(XCUITestOptions.BROWSER_NAME_OPTION, "safari");
+            xcuiTestOptions.setCapability(XCUITestOptions.SAFARI_INITIAL_URL_OPTION, "https://google.com");
         }
 
         try {
@@ -172,30 +166,27 @@ public class Hooks {
         // Appium 2.x
         UiAutomator2Options uiAutomator2Options = new UiAutomator2Options();
 
-        uiAutomator2Options.setCapability(MobileCapabilityType.AUTOMATION_NAME, "UiAutomator2");
-        uiAutomator2Options.setCapability(MobileCapabilityType.DEVICE_NAME, "Android");
-        uiAutomator2Options.setCapability(MobileCapabilityType.PLATFORM_NAME, "Android");
+        uiAutomator2Options.setCapability(UiAutomator2Options.AUTOMATION_NAME_OPTION, "UiAutomator2");
+        uiAutomator2Options.setCapability(UiAutomator2Options.DEVICE_NAME_OPTION, "Android");
+        uiAutomator2Options.setCapability(UiAutomator2Options.PRINT_PAGE_SOURCE_ON_FIND_FAILURE_OPTION, true);
         if (IS_NATIVE) {
-            uiAutomator2Options.setCapability("autoGrantPermissions", true);
-            uiAutomator2Options.setCapability("fullReset", true);
-            uiAutomator2Options.setCapability("app", new File("./sampleApps/AndroidCalculator.apk").getAbsolutePath());
-            uiAutomator2Options.setCapability("appPackage", "com.android2.calculator3");
-            uiAutomator2Options.setCapability("appActivity", "com.android2.calculator3.Calculator");
+            uiAutomator2Options.setCapability(UiAutomator2Options.AUTO_GRANT_PERMISSIONS_OPTION, true);
+            uiAutomator2Options.setCapability(UiAutomator2Options.FULL_RESET_OPTION, true);
+            uiAutomator2Options.setCapability(UiAutomator2Options.APP_OPTION, new File("./sampleApps/Calculator_8.4.1.apk").getAbsolutePath());
+//            uiAutomator2Options.setCapability(UiAutomator2Options.APP_PACKAGE_OPTION, "com.google.android.calculator");
+//            uiAutomator2Options.setCapability(UiAutomator2Options.APP_ACTIVITY_OPTION, "com.android.calculator2.Calculator");
         } else {
-            uiAutomator2Options.setCapability(AndroidMobileCapabilityType.BROWSER_NAME, "chrome");
+            uiAutomator2Options.setCapability(UiAutomator2Options.BROWSER_NAME_OPTION, "chrome");
         }
         System.out.println("UiAutomator2Options: " + uiAutomator2Options);
         try {
             driver = new AppiumDriver(new URL(APPIUM_SERVER_URL), uiAutomator2Options);
+            driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(1L));
         } catch (MalformedURLException e) {
             System.err.println("Error creating Appium driver for android device with capabilities: " + uiAutomator2Options);
             throw new RuntimeException(e);
         }
         System.out.printf("Created AppiumDriver for - %s%n", APPIUM_SERVER_URL);
-        if (IS_NATIVE) {
-            handleUpgradePopup();
-        }
-
         configureEyes(testInfo);
     }
 
@@ -212,22 +203,7 @@ public class Hooks {
         eyes.setIgnoreDisplacements(true);
         eyes.setLogHandler(new StdoutLogHandler(true));
         eyes.addProperty("username", userName);
+        eyes.setSaveNewTests(false);
         eyes.open(driver, className, testInfo.getDisplayName());
-    }
-
-    private void handleUpgradePopup() {
-        Wait.waitFor(1);
-        System.out.println("Handle upgrade popup");
-        WebElement upgradeAppNotificationElement = (WebElement) driver.findElement(
-                By.id("android:id/button1"));
-        if (null != upgradeAppNotificationElement) {
-            upgradeAppNotificationElement.click();
-            Wait.waitFor(1);
-        }
-        WebElement gotItElement = (WebElement) driver.findElement(By.id("com.android2.calculator3:id/cling_dismiss"));
-        if (null != gotItElement) {
-            gotItElement.click();
-            Wait.waitFor(1);
-        }
     }
 }
