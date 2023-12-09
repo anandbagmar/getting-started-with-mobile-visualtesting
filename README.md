@@ -25,7 +25,7 @@ the project automatically.
 **Or** run this command from a terminal prompt in the project root directory to install all 
 the projects dependencies and compile its source code using the Maven command-line tool.
 ```bash
-mvn compile
+./mvnw compile
 ```
 
 ***Note:*** the above command will _not_ run the tests.
@@ -127,7 +127,7 @@ You can also launch the tests from a terminal command line prompt using the Mave
 goal by executing the following command.
 
 ```bash
-mvn clean test -Dtest=<test_name>
+./mvnw clean test -Dtest=<test_name>
 ```
 
 ## Example Test Source Files
