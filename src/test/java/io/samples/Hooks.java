@@ -25,6 +25,7 @@ public class Hooks {
     private static final String userName = System.getProperty("user.name");
     private static BatchInfo batch;
     private static AppiumRunner appiumRunner;
+    private final String APPLITOOLS_API_KEY = System.getenv("APPLITOOLS_API_KEY");
     protected AppiumDriver driver;
     protected Eyes eyes;
     private static String APPIUM_SERVER_URL = "http://localhost:4723/wd/hub/";
@@ -53,6 +54,7 @@ public class Hooks {
         String batchName = userName + "-" + className;
         batch = new BatchInfo(batchName);
         batch.setId(String.valueOf(epochSecond));
+        batch.addProperty("REPOSITORY_NAME", new File(System.getProperty("user.dir")).getName());
         System.out.println("Create AppiumRunner");
         appiumRunner = new AppiumRunner();
         appiumRunner.setDontCloseBatches(true);
@@ -193,7 +195,7 @@ public class Hooks {
     private void configureEyes(TestInfo testInfo) {
         System.out.println("Setup Eyes configuration");
         eyes = new Eyes(appiumRunner);
-        eyes.setApiKey(System.getenv("APPLITOOLS_API_KEY"));
+        eyes.setApiKey(APPLITOOLS_API_KEY);
         eyes.setServerUrl("https://eyes.applitools.com");
         eyes.setMatchLevel(MatchLevel.STRICT);
         eyes.setBatch(batch);
