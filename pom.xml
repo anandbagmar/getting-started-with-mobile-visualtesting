@@ -51,7 +51,7 @@
         <dependency>
             <groupId>com.applitools</groupId>
             <artifactId>eyes-appium-java5</artifactId>
-            <version>5.66.0</version>
+            <version>5.66.1</version>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
