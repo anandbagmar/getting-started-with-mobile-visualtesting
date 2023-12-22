@@ -11,6 +11,7 @@ class AppiumNativeiOSHelloWorldTest extends Hooks {
         IS_EYES_ENABLED = false;
         PLATFORM_NAME = "ios";
         IS_NATIVE = true;
+        IOS_APP=HELLO_WORLD;
     }
 
     @Test

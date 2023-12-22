@@ -41,12 +41,22 @@ public class Hooks {
     private static final String IPHONE_15_IOS_PLATFORM_VERSION = "17.0";
     private static final String IPHONE_15_IOS_UDID = "218E1E36-2A38-4FE5-9F83-B0D0247D2F90";
     private static final String IPHONE_15_PRO_IOS_DEVICE_NAME = "iPhone 15 Pro";
-    private static final String IPHONE_15_PRO_IOS_PLATFORM_VERSION = "17.0";
-    private static final String IPHONE_15_PRO_IOS_UDID = "3B36710C-C6CE-4585-9225-9A50BCB6A634";
-    private static final String IOS_UDID = IPHONE_6S_IOS_UDID;
-    private static final String IOS_DEVICE_NAME = IPHONE_6S_IOS_DEVICE_NAME;
-    private static final String IOS_PLATFORM_VERSION = IPHONE_6S_IOS_PLATFORM_VERSION;
-
+    private static final String IPHONE_15_PRO_IOS_PLATFORM_VERSION = "17.0.1";
+    private static final String IPHONE_15_PRO_IOS_UDID = "9FC5EB25-92F9-445F-9D02-D455F3E91CFA";
+    private static final String IPHONE_13_PRO_IOS_DEVICE_NAME = "iPhone 13 Pro Simulator";
+    private static final String IPHONE_13_PRO_IOS_PLATFORM_VERSION = "15.0";
+    private static final String IPHONE_13_PRO_IOS_UDID = "D1F771B9-F1C1-42AC-A5F8-872595DCCF99";
+    private static final String IPHONE_15_PRO_MAX_IOS_DEVICE_NAME = "iPhone 15 Pro Max";
+    private static final String IPHONE_15_PRO_MAX_IOS_PLATFORM_VERSION = "17.0.1";
+    private static final String IPHONE_15_PRO_MAX_IOS_UDID = "6D0B0380-8D96-42AE-AE4E-1C00B87ACF01";
+    private static final String IPHONE_14_IOS_DEVICE_NAME = "iPhone 14";
+    private static final String IPHONE_14_IOS_PLATFORM_VERSION = "16.4";
+    private static final String IPHONE_14_IOS_UDID = "194DFF4B-49F3-4F0C-B994-A12A492FE591";
+    private static final String IOS_UDID = IPHONE_13_PRO_IOS_UDID;
+    private static final String IOS_DEVICE_NAME = IPHONE_13_PRO_IOS_DEVICE_NAME;
+    private static final String IOS_PLATFORM_VERSION = IPHONE_13_PRO_IOS_PLATFORM_VERSION;
+    protected String HELLO_WORLD = "HELLO_WORLD";
+    protected String IOS_APP = "NOT_SET";
 
     @BeforeAll
     static void beforeAll() {
@@ -138,11 +148,11 @@ public class Hooks {
         xcuiTestOptions.setCapability(XCUITestOptions.PLATFORM_VERSION_OPTION, IOS_PLATFORM_VERSION);
         xcuiTestOptions.setCapability(XCUITestOptions.DEVICE_NAME_OPTION, IOS_DEVICE_NAME);
         xcuiTestOptions.setCapability(XCUITestOptions.UDID_OPTION, IOS_UDID);
-        xcuiTestOptions.setCapability(XCUITestOptions.FULL_RESET_OPTION, false);
+        xcuiTestOptions.setCapability(XCUITestOptions.FULL_RESET_OPTION, true);
 //        xcuiTestOptions.setCapability(XCUITestOptions.NO_RESET_OPTION, false);
 
-        xcuiTestOptions.setCapability(XCUITestOptions.SHOW_XCODE_LOG_OPTION, true);
-//         xcuiTestOptions.setCapability(XCUITestOptions.SHOW_IOS_LOG_OPTION, true);
+        xcuiTestOptions.setCapability(XCUITestOptions.SHOW_XCODE_LOG_OPTION, false);
+        xcuiTestOptions.setCapability(XCUITestOptions.SHOW_IOS_LOG_OPTION, false);
         xcuiTestOptions.setCapability(XCUITestOptions.PRINT_PAGE_SOURCE_ON_FIND_FAILURE_OPTION, true);
         xcuiTestOptions.setCapability(XCUITestOptions.AUTO_ACCEPT_ALERTS_OPTION, true);
         if (IS_NATIVE) {
@@ -174,6 +184,8 @@ public class Hooks {
         if (IS_NATIVE) {
             uiAutomator2Options.setCapability(UiAutomator2Options.AUTO_GRANT_PERMISSIONS_OPTION, true);
             uiAutomator2Options.setCapability(UiAutomator2Options.FULL_RESET_OPTION, true);
+            uiAutomator2Options.setCapability(UiAutomator2Options.NO_RESET_OPTION, false);
+            uiAutomator2Options.setCapability("nativeWebScreenshot", true);
             uiAutomator2Options.setCapability(UiAutomator2Options.APP_OPTION, new File("./sampleApps/Calculator_8.4.1.apk").getAbsolutePath());
 //            uiAutomator2Options.setCapability(UiAutomator2Options.APP_PACKAGE_OPTION, "com.google.android.calculator");
 //            uiAutomator2Options.setCapability(UiAutomator2Options.APP_ACTIVITY_OPTION, "com.android.calculator2.Calculator");
