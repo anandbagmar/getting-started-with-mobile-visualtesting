@@ -127,7 +127,7 @@ You can also launch the tests from a terminal command line prompt using the Mave
 goal by executing the following command.
 
 ```bash
-./mvnw clean test -Dtest=<test_name>
+./gradlew clean test --tests <test_name>
 ```
 
 ## Example Test Source Files

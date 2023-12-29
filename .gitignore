@@ -24,12 +24,9 @@ hs_err_pid*
 /.idea/
 
 target
-sampleApps/
-node_modules
+*.iml
 .gradle
 build/
-target/
-
-.DS_Store
-*.iml
-ticket/
+reports/
+node_modules/
+sampleApps/

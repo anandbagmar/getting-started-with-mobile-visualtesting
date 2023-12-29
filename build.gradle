@@ -1,6 +1,12 @@
+import org.codehaus.groovy.runtime.GStringImpl
+import java.text.SimpleDateFormat
+
 buildscript {
     ext {
         gradleVersion = '8.5'
+        junitVersion = '5.10.1'
+        applitoolsVersion = '5.66.3'
+        appiumJavaClientVersion = '9.0.0'
     }
     repositories {
         mavenLocal()
@@ -21,26 +27,71 @@ repositories {
 compileJava { options.encoding = "UTF-8" }
 
 dependencies {
-    implementation ("com.applitools:eyes-appium-java5:5.66.3") {
+    implementation ("com.applitools:eyes-appium-java5:$project.applitoolsVersion)") {
 //        exclude group: 'io.appium', module: 'java-client'
     }
-    testImplementation 'org.junit.jupiter:junit-jupiter:5.10.0'
-//    implementation 'io.appium:java-client:9.0.0'
+    implementation "org.junit.jupiter:junit-jupiter:$project.junitVersion"
+    implementation "io.appium:java-client:$project.appiumJavaClientVersion"
+}
+
+static def getCurrentDatestamp() {
+    Date today = new Date()
+    SimpleDateFormat df = new SimpleDateFormat("MM-dd-yyyy")
+    return df.format(today)
+}
+
+static def getCurrentTimestamp() {
+    Date today = new Date()
+    SimpleDateFormat df = new SimpleDateFormat("HH-mm-ss")
+    return df.format(today)
+}
+
+project.ext.logDir = "${rootDir}/reports/" + getCurrentDatestamp() + "/" + getCurrentTimestamp() as GStringImpl
+
+test {
+    doFirst {
+        environment "APPLITOOLS_DONT_CLOSE_BATCHES", "true"
+        environment "APPLITOOLS_LOG_DIR", "${project.logDir}/applitools_logs"
+    }
+    useJUnitPlatform() {
+        reports.html.destination(new File("${project.logDir}/html"))
+
+        reports.junitXml.outputPerTestCase(true)
+        reports.junitXml.destination(new File("${project.logDir}/junit"))
+        testLogging {
+            events "started", "passed", "skipped", "failed"
+            // show standard out and standard error of the test JVM(s) on the console
+            showStandardStreams = true
+            // show full exception trace
+            exceptionFormat = 'full'
+            showStackTraces = true
+            showCauses = true
+            showExceptions = true
+        }
+        println("Log directory: ${project.logDir}")
+        println("Debug mode: " + System.getProperty('debug', 'false'))
+        // attach debugger
+        if (System.getProperty('debug', 'false') == 'true') {
+            println("In debug mode")
+            jvmArgs '-Xdebug', '-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,' + 'address=*:5005'
+        }
+
+    }
+}
+
+clean.doFirst {
+    delete "${rootDir}/target"
+    delete "${rootDir}/bin"
+    delete "${rootDir}/build"
+    delete "${rootDir}/out"
+    println "Clean: Deleted bin, build, out, target and reports directories"
+}
+
+clean.doLast {
+    mkdir "${rootDir}/reports"
+    println "Created reports directory"
 }
 
 wrapper {
     gradleVersion = project.gradleVersion // version from gradle.properties
-}
-
-test {
-    useJUnitPlatform()
-
-    println("Debug mode: " + System.getProperty('debug', 'false'))
-    // attach debugger
-    // example: ./gradlew run -Ddebug=true
-    if (System.getProperty('debug', 'false') == 'true') {
-        println("In debug mode")
-        jvmArgs '-Xdebug', '-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,' +
-                'address=*:5005'
-    }
 }
