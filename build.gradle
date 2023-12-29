@@ -1,6 +1,6 @@
 buildscript {
     ext {
-        gradleVersion = '8.2'
+        gradleVersion = '8.5'
     }
     repositories {
         mavenLocal()
@@ -21,7 +21,9 @@ repositories {
 compileJava { options.encoding = "UTF-8" }
 
 dependencies {
-    implementation 'com.applitools:eyes-appium-java5:5.66.3'
+    implementation ("com.applitools:eyes-appium-java5:5.66.3") {
+//        exclude group: 'io.appium', module: 'java-client'
+    }
     testImplementation 'org.junit.jupiter:junit-jupiter:5.10.0'
 //    implementation 'io.appium:java-client:9.0.0'
 }

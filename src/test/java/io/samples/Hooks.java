@@ -148,7 +148,7 @@ public class Hooks {
         xcuiTestOptions.setCapability(XCUITestOptions.PLATFORM_VERSION_OPTION, IOS_PLATFORM_VERSION);
         xcuiTestOptions.setCapability(XCUITestOptions.DEVICE_NAME_OPTION, IOS_DEVICE_NAME);
         xcuiTestOptions.setCapability(XCUITestOptions.UDID_OPTION, IOS_UDID);
-        xcuiTestOptions.setCapability(XCUITestOptions.FULL_RESET_OPTION, true);
+        xcuiTestOptions.setCapability(XCUITestOptions.FULL_RESET_OPTION, false);
 //        xcuiTestOptions.setCapability(XCUITestOptions.NO_RESET_OPTION, false);
 
         xcuiTestOptions.setCapability(XCUITestOptions.SHOW_XCODE_LOG_OPTION, false);

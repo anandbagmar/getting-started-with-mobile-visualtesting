@@ -14,7 +14,7 @@ class FirstEyesTest extends Hooks {
 
     @Test
     void calculatorTest_id() {
-        eyes.check("Calculator!", Target.window().ignoreCaret());
+        eyes.check("Calculator!-ignoreCaret", Target.window().ignoreCaret());
         eyes.checkWindow("Calculator!");
 
         int p1 = 3;
@@ -30,13 +30,13 @@ class FirstEyesTest extends Hooks {
         eyes.check("digit_" + p2 + "-byElement", Target.region(By.id("digit_" + p2)));
 
         driver.findElement(By.id("eq")).click();
+        eyes.check("eq-ignoreCaret", Target.window().ignoreCaret());
         eyes.checkWindow("eq");
-        eyes.check("eq", Target.window().ignoreCaret());
     }
 
     @Test
     void calculatorTest_full() {
-        eyes.check("Calculator!", Target.window().ignoreCaret());
+        eyes.check("Calculator!-ignoreCaret", Target.window().ignoreCaret());
         eyes.checkWindow("Calculator!");
 
         int p1 = 5;
@@ -52,7 +52,7 @@ class FirstEyesTest extends Hooks {
         eyes.check("digit_" + p2 + "-byElement", Target.region(driver.findElement(By.id("digit_" + p2))));
 
         driver.findElement(By.id("eq")).click();
-        eyes.check("eq", Target.window().ignoreCaret());
+        eyes.check("eq-ignoreCaret", Target.window().ignoreCaret());
         eyes.checkWindow("eq");
     }
 }
