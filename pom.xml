@@ -40,12 +40,12 @@
             <groupId>com.applitools</groupId>
             <artifactId>eyes-appium-java5</artifactId>
             <version>5.66.3</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>io.appium</groupId>
-                    <artifactId>java-client</artifactId>
-                </exclusion>
-            </exclusions>
+<!--            <exclusions>-->
+<!--                <exclusion>-->
+<!--                    <groupId>io.appium</groupId>-->
+<!--                    <artifactId>java-client</artifactId>-->
+<!--                </exclusion>-->
+<!--            </exclusions>-->
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
@@ -53,11 +53,11 @@
             <version>5.10.0</version>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>io.appium</groupId>
-            <artifactId>java-client</artifactId>
-            <version>9.0.0</version>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>io.appium</groupId>-->
+<!--            <artifactId>java-client</artifactId>-->
+<!--            <version>9.0.0</version>-->
+<!--        </dependency>-->
     </dependencies>
 
 </project>
