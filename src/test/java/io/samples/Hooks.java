@@ -3,6 +3,8 @@ package io.samples;
 import com.applitools.eyes.*;
 import com.applitools.eyes.appium.AppiumRunner;
 import com.applitools.eyes.appium.Eyes;
+import com.applitools.eyes.config.Configuration;
+import com.applitools.eyes.visualgrid.model.*;
 import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.android.options.UiAutomator2Options;
 import io.appium.java_client.ios.options.XCUITestOptions;
@@ -10,6 +12,8 @@ import io.appium.java_client.service.local.AppiumDriverLocalService;
 import io.appium.java_client.service.local.AppiumServiceBuilder;
 import io.appium.java_client.service.local.flags.GeneralServerFlag;
 import org.junit.jupiter.api.*;
+import org.openqa.selenium.Capabilities;
+import org.openqa.selenium.remote.DesiredCapabilities;
 
 import java.io.File;
 import java.net.MalformedURLException;
@@ -24,7 +28,6 @@ public class Hooks {
     private static final long epochSecond = new Date().toInstant().getEpochSecond();
     private static final String userName = System.getProperty("user.name");
     private static BatchInfo batch;
-    private static AppiumRunner appiumRunner;
     private final String APPLITOOLS_API_KEY = System.getenv("APPLITOOLS_API_KEY");
     protected AppiumDriver driver;
     protected Eyes eyes;
@@ -32,6 +35,7 @@ public class Hooks {
     private static AppiumDriverLocalService localAppiumServer;
     protected static boolean IS_EYES_ENABLED = false;
     protected static boolean IS_NATIVE = true;
+    protected static boolean IS_NML = false;
     protected static String PLATFORM_NAME = "android";
 
     private static final String IPHONE_6S_IOS_DEVICE_NAME = "iPhone";
@@ -46,15 +50,15 @@ public class Hooks {
     private static final String IPHONE_13_PRO_IOS_DEVICE_NAME = "iPhone 13 Pro Simulator";
     private static final String IPHONE_13_PRO_IOS_PLATFORM_VERSION = "15.0";
     private static final String IPHONE_13_PRO_IOS_UDID = "D1F771B9-F1C1-42AC-A5F8-872595DCCF99";
-    private static final String IPHONE_15_PRO_MAX_IOS_DEVICE_NAME = "iPhone 15 Pro Max";
-    private static final String IPHONE_15_PRO_MAX_IOS_PLATFORM_VERSION = "17.0.1";
-    private static final String IPHONE_15_PRO_MAX_IOS_UDID = "6D0B0380-8D96-42AE-AE4E-1C00B87ACF01";
+    private static final String IPHONE_15_PRO_MAX_IOS_DEVICE_NAME = "iPhone 15 Pro Max Simulator";
+    private static final String IPHONE_15_PRO_MAX_IOS_PLATFORM_VERSION = "17.2";
+    private static final String IPHONE_15_PRO_MAX_IOS_UDID = "42D23972-07E3-4E8F-8E12-0C4E6BC0CF89";
     private static final String IPHONE_14_IOS_DEVICE_NAME = "iPhone 14";
     private static final String IPHONE_14_IOS_PLATFORM_VERSION = "16.4";
     private static final String IPHONE_14_IOS_UDID = "194DFF4B-49F3-4F0C-B994-A12A492FE591";
-    private static final String IOS_UDID = IPHONE_13_PRO_IOS_UDID;
-    private static final String IOS_DEVICE_NAME = IPHONE_13_PRO_IOS_DEVICE_NAME;
-    private static final String IOS_PLATFORM_VERSION = IPHONE_13_PRO_IOS_PLATFORM_VERSION;
+    private static final String IOS_UDID = IPHONE_15_PRO_MAX_IOS_UDID;
+    private static final String IOS_DEVICE_NAME = IPHONE_15_PRO_MAX_IOS_DEVICE_NAME;
+    private static final String IOS_PLATFORM_VERSION = IPHONE_15_PRO_MAX_IOS_PLATFORM_VERSION;
     protected String HELLO_WORLD = "HELLO_WORLD";
     protected String IOS_APP = "NOT_SET";
 
@@ -66,8 +70,6 @@ public class Hooks {
         batch.setId(String.valueOf(epochSecond));
         batch.addProperty("REPOSITORY_NAME", new File(System.getProperty("user.dir")).getName());
         System.out.println("Create AppiumRunner");
-        appiumRunner = new AppiumRunner();
-        appiumRunner.setDontCloseBatches(true);
         System.out.printf("Batch name: %s%n", batch.getName());
         System.out.printf("Batch startedAt: %s%n", batch.getStartedAt().getTime());
         System.out.printf("Batch BatchId: %s%n", batch.getId());
@@ -75,12 +77,8 @@ public class Hooks {
 
     @AfterAll
     static void afterAll() {
-        System.out.printf("AfterAll: Stopping the local Appium server running on: '%s'%n",
-                APPIUM_SERVER_URL);
-        if (null!=appiumRunner) {
-            appiumRunner.close();
-        }
-        if (null!=batch) {
+        System.out.printf("AfterAll: Stopping the local Appium server running on: '%s'%n", APPIUM_SERVER_URL);
+        if (null != batch) {
             batch.setCompleted(true);
         }
         if (null != localAppiumServer) {
@@ -102,22 +100,18 @@ public class Hooks {
     @AfterEach
     void tearDown(TestInfo testInfo) {
         System.out.println("AfterEach: Test - " + testInfo.getDisplayName());
-        AtomicBoolean isPass = new AtomicBoolean(true);
+        boolean isPass = true;
         if (IS_EYES_ENABLED) {
-            eyes.closeAsync();
-            TestResultsSummary allTestResults = appiumRunner.getAllTestResults(false);
-            allTestResults.forEach(testResultContainer -> {
-                System.out.printf("Test: %s\n%s%n", testResultContainer.getTestResults().getName(), testResultContainer);
-                TestResultsStatus testResultsStatus = testResultContainer.getTestResults().getStatus();
-                if (testResultsStatus.equals(TestResultsStatus.Failed) || testResultsStatus.equals(TestResultsStatus.Unresolved)) {
-                    isPass.set(false);
-                }
-            });
+            TestResults testResults = eyes.close(false);
+            System.out.printf("Test: %s\n%s%n", testResults.getName(), testResults);
+            if (testResults.getStatus().equals(TestResultsStatus.Failed) || testResults.getStatus().equals(TestResultsStatus.Unresolved)) {
+                isPass = false;
+            }
         }
         if (null != driver) {
             driver.quit();
         }
-        Assertions.assertTrue(isPass.get(), "Visual differences found.");
+        Assertions.assertTrue(isPass, "Visual differences found.");
     }
 
     private static void startAppiumServer() {
@@ -144,11 +138,14 @@ public class Hooks {
         System.out.printf("Create AppiumDriver for iOS test - %s%n", APPIUM_SERVER_URL);
 
         // Appium 2.x
-        XCUITestOptions xcuiTestOptions = new XCUITestOptions();
+//        XCUITestOptions xcuiTestOptions = new XCUITestOptions();
+        DesiredCapabilities xcuiTestOptions = new DesiredCapabilities();
+        xcuiTestOptions.setCapability("platformName", "iOS");
+        xcuiTestOptions.setCapability("appium:automationName", "XCUITest");
         xcuiTestOptions.setCapability(XCUITestOptions.PLATFORM_VERSION_OPTION, IOS_PLATFORM_VERSION);
         xcuiTestOptions.setCapability(XCUITestOptions.DEVICE_NAME_OPTION, IOS_DEVICE_NAME);
         xcuiTestOptions.setCapability(XCUITestOptions.UDID_OPTION, IOS_UDID);
-        xcuiTestOptions.setCapability(XCUITestOptions.FULL_RESET_OPTION, false);
+        xcuiTestOptions.setCapability(XCUITestOptions.FULL_RESET_OPTION, true);
 //        xcuiTestOptions.setCapability(XCUITestOptions.NO_RESET_OPTION, false);
 
         xcuiTestOptions.setCapability(XCUITestOptions.SHOW_XCODE_LOG_OPTION, false);
@@ -156,14 +153,24 @@ public class Hooks {
         xcuiTestOptions.setCapability(XCUITestOptions.PRINT_PAGE_SOURCE_ON_FIND_FAILURE_OPTION, true);
         xcuiTestOptions.setCapability(XCUITestOptions.AUTO_ACCEPT_ALERTS_OPTION, true);
         if (IS_NATIVE) {
-        xcuiTestOptions.setCapability("app", System.getProperty("user.dir") + "/sampleApps/eyes-ios-hello-world.zip");
+            if (IOS_APP.equals(HELLO_WORLD)) {
+                if (IS_NML) {
+                    xcuiTestOptions.setCapability("app", System.getProperty("user.dir") + "/sampleApps/dist/HelloWorldiOS-instrumented.app");
+                    System.out.printf("Add devices to NML configuration using capabilities: %%n%s%n", xcuiTestOptions);
+                    Eyes.setMobileCapabilities(xcuiTestOptions, APPLITOOLS_API_KEY);
+                } else {
+                    xcuiTestOptions.setCapability("app", System.getProperty("user.dir") + "/sampleApps/eyes-ios-hello-world.zip");
+                }
+            }
         } else {
             xcuiTestOptions.setCapability(XCUITestOptions.BROWSER_NAME_OPTION, "safari");
             xcuiTestOptions.setCapability(XCUITestOptions.SAFARI_INITIAL_URL_OPTION, "https://google.com");
         }
 
+        System.out.println("XCUITestOptions: " + xcuiTestOptions);
         try {
             driver = new AppiumDriver(new URL(APPIUM_SERVER_URL), xcuiTestOptions);
+            driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(1L));
         } catch (MalformedURLException e) {
             System.err.println("Error creating Appium driver for iOS device with capabilities: " + xcuiTestOptions);
             throw new RuntimeException(e);
@@ -176,7 +183,9 @@ public class Hooks {
         System.out.println("BeforeEach: Test - " + testInfo.getDisplayName());
         System.out.printf("Create AppiumDriver for android test - %s%n", APPIUM_SERVER_URL);
         // Appium 2.x
-        UiAutomator2Options uiAutomator2Options = new UiAutomator2Options();
+        DesiredCapabilities uiAutomator2Options = new DesiredCapabilities();
+//        UiAutomator2Options uiAutomator2Options = new UiAutomator2Options();
+        uiAutomator2Options.setCapability("platformName", "Android");
 
         uiAutomator2Options.setCapability(UiAutomator2Options.AUTOMATION_NAME_OPTION, "UiAutomator2");
         uiAutomator2Options.setCapability(UiAutomator2Options.DEVICE_NAME_OPTION, "Android");
@@ -186,12 +195,19 @@ public class Hooks {
             uiAutomator2Options.setCapability(UiAutomator2Options.FULL_RESET_OPTION, true);
             uiAutomator2Options.setCapability(UiAutomator2Options.NO_RESET_OPTION, false);
             uiAutomator2Options.setCapability("nativeWebScreenshot", true);
-            uiAutomator2Options.setCapability(UiAutomator2Options.APP_OPTION, new File("./sampleApps/Calculator_8.4.1.apk").getAbsolutePath());
 //            uiAutomator2Options.setCapability(UiAutomator2Options.APP_PACKAGE_OPTION, "com.google.android.calculator");
 //            uiAutomator2Options.setCapability(UiAutomator2Options.APP_ACTIVITY_OPTION, "com.android.calculator2.Calculator");
+            if (IS_NML) {
+                uiAutomator2Options.setCapability(UiAutomator2Options.APP_OPTION, new File("./sampleApps/dist/Calculator_8.4.1.apk").getAbsolutePath());
+                System.out.printf("Add devices to NML configuration using capabilities: %%n%s%n", uiAutomator2Options);
+                Eyes.setMobileCapabilities(uiAutomator2Options, APPLITOOLS_API_KEY);
+            } else {
+                uiAutomator2Options.setCapability(UiAutomator2Options.APP_OPTION, new File("./sampleApps/Calculator_8.4.1.apk").getAbsolutePath());
+            }
         } else {
             uiAutomator2Options.setCapability(UiAutomator2Options.BROWSER_NAME_OPTION, "chrome");
         }
+
         System.out.println("UiAutomator2Options: " + uiAutomator2Options);
         try {
             driver = new AppiumDriver(new URL(APPIUM_SERVER_URL), uiAutomator2Options);
@@ -206,7 +222,7 @@ public class Hooks {
 
     private void configureEyes(TestInfo testInfo) {
         System.out.println("Setup Eyes configuration");
-        eyes = new Eyes(appiumRunner);
+        eyes = new Eyes();
         eyes.setApiKey(APPLITOOLS_API_KEY);
         eyes.setServerUrl("https://eyes.applitools.com");
         eyes.setMatchLevel(MatchLevel.STRICT);
@@ -218,6 +234,18 @@ public class Hooks {
         eyes.setLogHandler(new StdoutLogHandler(true));
         eyes.addProperty("username", userName);
         eyes.setSaveNewTests(false);
+        if (IS_NML) {
+            Configuration configuration = eyes.getConfiguration();
+            if (PLATFORM_NAME.equalsIgnoreCase("android")) {
+                configuration.addMobileDevice(new AndroidDeviceInfo(AndroidDeviceName.Galaxy_S22_Plus));
+                configuration.addMobileDevice(new AndroidDeviceInfo(AndroidDeviceName.Galaxy_Note_10_Plus));
+            } else {
+                configuration.addMobileDevice(new IosDeviceInfo(IosDeviceName.iPhone_12_mini));
+                configuration.addMobileDevice(new IosDeviceInfo(IosDeviceName.iPhone_SE_3));
+                configuration.addMobileDevice(new IosDeviceInfo(IosDeviceName.iPhone_15_Pro_Max));
+            }
+            eyes.setConfiguration(configuration);
+        }
         eyes.open(driver, className, testInfo.getDisplayName());
     }
 }

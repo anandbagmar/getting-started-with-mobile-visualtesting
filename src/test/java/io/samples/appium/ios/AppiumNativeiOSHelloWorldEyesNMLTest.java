@@ -3,12 +3,12 @@ package io.samples.appium.ios;
 import io.samples.Hooks;
 import org.junit.jupiter.api.Test;
 
-class AppiumNativeiOSHelloWorldEyesTest extends Hooks {
-    AppiumNativeiOSHelloWorldEyesTest() {
+class AppiumNativeiOSHelloWorldEyesNMLTest extends Hooks {
+    AppiumNativeiOSHelloWorldEyesNMLTest() {
         IS_EYES_ENABLED = true;
         PLATFORM_NAME = "ios";
         IS_NATIVE = true;
-        IS_NML = false;
+        IS_NML = true;
         IOS_APP = HELLO_WORLD;
     }
 

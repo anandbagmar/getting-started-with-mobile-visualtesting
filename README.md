@@ -132,10 +132,6 @@ goal by executing the following command.
 
 ## Example Test Source Files
 
-1. [io.samples.Hooks.java](src/test/java/android/io.samples.Hooks.java)
-> This is not a test class, but the other tests classes extend the io.samples.Hooks class to inherit its
-[JUnit lifecycle methods](https://junit.org/junit5/docs/current/user-guide/#writing-tests-classes-and-methods).
-
 1. [CalcTest.java](src/test/java/android/CalcTest.java)
 > A basic Appium test, *without* Applitools Eyes screen checks.
  
@@ -145,3 +141,29 @@ goal by executing the following command.
 1. [SecondEyesTest.java](src/test/java/android/SecondEyesTest.java) 
 > This test class is the same as the FirstEyesTest.  It's useful to demonstrate running multiple tests.
 
+### iOS
+
+* [WebiOSHelloWorldTest.java](src/test/java/ios/WebiOSHelloWorldTest.java) - A basic appium test *without* Applitools Eyes to test a web application (mobile-web) using a safari browser in a iOS device, 
+   ```bash
+   ./gradlew clean test --tests WebiOSHelloWorldTest
+   ```
+
+* [WebiOSHelloWorldEyesTest.java](src/test/java/ios/WebiOSHelloWorldEyesTest.java) - A basic appium test *with* Applitools Eyes to test a web application (mobile-web) using a safari browser in a iOS device,
+   ```bash
+   ./gradlew clean test --tests WebiOSHelloWorldEyesTest
+   ```
+
+* [AppiumNativeiOSHelloWorldTest.java](src/test/java/io/samples/appium/ios/AppiumNativeiOSHelloWorldTest.java) - A basic appium test *without* Applitools Eyes for a native iOS app
+   ```bash
+   ./gradlew clean test --tests AppiumNativeiOSHelloWorldTest
+   ```
+
+* [AppiumNativeiOSHelloWorldEyesTest.java](src/test/java/io/samples/appium/ios/AppiumNativeiOSHelloWorldEyesTest.java) - A basic appium test *with* Applitools Eyes for a native iOS app 
+   ```bash
+   ./gradlew clean test --tests AppiumNativeiOSHelloWorldEyesTest
+   ```
+  
+  * [AppiumNativeiOSHelloWorldEyesNMLTest.java](src/test/java/io/samples/appium/ios/AppiumNativeiOSHelloWorldEyesNMLTest.java) - A basic appium test *with* Applitools Eyes and uses the *Native Mobile Library and MultiViewPort capability* of Applitools for a native iOS app
+     ```bash
+     ./gradlew clean test --tests AppiumNativeiOSHelloWorldEyesNMLTest
+     ```
