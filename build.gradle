@@ -54,10 +54,13 @@ test {
         environment "APPLITOOLS_LOG_DIR", "${project.logDir}/applitools_logs"
     }
     useJUnitPlatform() {
-        reports.html.destination(new File("${project.logDir}/html"))
-
+        reports {
+            html.required.set(true)
+            junitXml.required.set(true)
+            html.outputLocation.set(file("$project.logDir/html"))
+            junitXml.outputLocation.set(file("$project.logDir/junit"))
+        }
         reports.junitXml.outputPerTestCase(true)
-        reports.junitXml.destination(new File("${project.logDir}/junit"))
         testLogging {
             events "started", "passed", "skipped", "failed"
             // show standard out and standard error of the test JVM(s) on the console
