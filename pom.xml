@@ -39,7 +39,7 @@
         <dependency>
             <groupId>com.applitools</groupId>
             <artifactId>eyes-appium-java5</artifactId>
-            <version>5.66.7</version>
+            <version>5.66.8</version>
 <!--            <exclusions>-->
 <!--                <exclusion>-->
 <!--                    <groupId>io.appium</groupId>-->
