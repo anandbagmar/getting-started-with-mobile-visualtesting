@@ -5,7 +5,7 @@ buildscript {
     ext {
         gradleVersion = '8.6'
         junitVersion = '5.10.2'
-        applitoolsVersion = '5.66.8'
+        applitoolsVersion = '5.66.9'
         appiumJavaClientVersion = '9.0.0'
     }
     repositories {
