@@ -132,14 +132,21 @@ goal by executing the following command.
 
 ## Example Test Source Files
 
-1. [CalcTest.java](src/test/java/android/CalcTest.java)
-> A basic Appium test, *without* Applitools Eyes screen checks.
- 
-1. [FirstEyesTest.java](src/test/java/android/FirstEyesTest.java)
-> A basic Appium test, *with* Applitools Eyes screen checks.
+### Android
+* [CalculatorTest.java](src/test/java/android/CalculatorTest.java) - A basic Appium test, *without* Applitools Eyes
+   ```bash
+   ./gradlew clean test --tests CalculatorTest
+   ```
 
-1. [SecondEyesTest.java](src/test/java/android/SecondEyesTest.java) 
-> This test class is the same as the FirstEyesTest.  It's useful to demonstrate running multiple tests.
+* [CalculatorEyesTest.java](src/test/java/android/CalculatorEyesTest.java) - A basic Appium test, *with* Applitools Eyes
+   ```bash
+   ./gradlew clean test --tests CalculatorEyesTest
+   ```
+  
+* [CalculatorEyesNMLTest.java](src/test/java/android/CalculatorEyesNMLTest.java) - A basic appium test *with* Applitools Eyes and uses the *Native Mobile Library and MultiViewPort capability* of Applitools for a native iOS app
+   ```bash
+   ./gradlew clean test --tests CalculatorEyesNMLTest
+   ```
 
 ### iOS
 

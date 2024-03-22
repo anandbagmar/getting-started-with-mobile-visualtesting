@@ -5,8 +5,8 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
 
-class CalcTest extends Hooks {
-    CalcTest() {
+class CalculatorTest extends Hooks {
+    CalculatorTest() {
         IS_EYES_ENABLED = false;
         IS_NATIVE = true;
         PLATFORM_NAME = "android";

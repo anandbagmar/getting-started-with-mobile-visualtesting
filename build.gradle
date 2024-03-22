@@ -5,7 +5,7 @@ buildscript {
     ext {
         gradleVersion = '8.6'
         junitVersion = '5.10.2'
-        applitoolsVersion = '5.66.9'
+        applitoolsVersion = '5.67.2'
         appiumJavaClientVersion = '9.1.0'
     }
     repositories {
@@ -52,6 +52,7 @@ test {
     doFirst {
         environment "APPLITOOLS_DONT_CLOSE_BATCHES", "true"
         environment "APPLITOOLS_LOG_DIR", "${project.logDir}/applitools_logs"
+        environment "LOG_DIR", "${project.logDir}"
     }
     useJUnitPlatform() {
         reports {

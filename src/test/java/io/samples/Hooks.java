@@ -41,26 +41,21 @@ public class Hooks {
     private static final String IPHONE_6S_IOS_DEVICE_NAME = "iPhone";
     private static final String IPHONE_6S_IOS_PLATFORM_VERSION = "17.0";
     private static final String IPHONE_6S_IOS_UDID = "auto";
-    private static final String IPHONE_15_IOS_DEVICE_NAME = "iPhone 15";
-    private static final String IPHONE_15_IOS_PLATFORM_VERSION = "17.0";
-    private static final String IPHONE_15_IOS_UDID = "218E1E36-2A38-4FE5-9F83-B0D0247D2F90";
     private static final String IPHONE_15_PRO_IOS_DEVICE_NAME = "iPhone 15 Pro";
-    private static final String IPHONE_15_PRO_IOS_PLATFORM_VERSION = "17.0.1";
-    private static final String IPHONE_15_PRO_IOS_UDID = "9FC5EB25-92F9-445F-9D02-D455F3E91CFA";
-    private static final String IPHONE_13_PRO_IOS_DEVICE_NAME = "iPhone 13 Pro Simulator";
-    private static final String IPHONE_13_PRO_IOS_PLATFORM_VERSION = "15.0";
-    private static final String IPHONE_13_PRO_IOS_UDID = "D1F771B9-F1C1-42AC-A5F8-872595DCCF99";
-    private static final String IPHONE_15_PRO_MAX_IOS_DEVICE_NAME = "iPhone 15 Pro Max Simulator";
-    private static final String IPHONE_15_PRO_MAX_IOS_PLATFORM_VERSION = "17.2";
-    private static final String IPHONE_15_PRO_MAX_IOS_UDID = "42D23972-07E3-4E8F-8E12-0C4E6BC0CF89";
+    private static final String IPHONE_15_PRO_IOS_PLATFORM_VERSION = "17.4";
+    private static final String IPHONE_15_PRO_IOS_UDID = "81064703-199A-41BB-B09E-94F94625536B";
+    private static final String IPHONE_14_PRO_IOS_DEVICE_NAME = "iPhone 14 Pro";
+    private static final String IPHONE_14_PRO_IOS_PLATFORM_VERSION = "16.4";
+    private static final String IPHONE_14_PRO_IOS_UDID = "EEC2A290-3E9E-4455-A19B-4FE566BA320E";
+    private static final String IPHONE_15_PRO_MAX_IOS_DEVICE_NAME = "iPhone 15 Pro Max";
+    private static final String IPHONE_15_PRO_MAX_IOS_PLATFORM_VERSION = "17.4";
+    private static final String IPHONE_15_PRO_MAX_IOS_UDID = "82A56E9E-E2A3-4D57-A5B5-C602823CEB75";
     private static final String IPHONE_14_IOS_DEVICE_NAME = "iPhone 14";
     private static final String IPHONE_14_IOS_PLATFORM_VERSION = "16.4";
     private static final String IPHONE_14_IOS_UDID = "194DFF4B-49F3-4F0C-B994-A12A492FE591";
-    private static final String IOS_UDID = IPHONE_15_PRO_MAX_IOS_UDID;
-    private static final String IOS_DEVICE_NAME = IPHONE_15_PRO_MAX_IOS_DEVICE_NAME;
-    private static final String IOS_PLATFORM_VERSION = IPHONE_15_PRO_MAX_IOS_PLATFORM_VERSION;
-    protected String HELLO_WORLD = "HELLO_WORLD";
-    protected String IOS_APP = "NOT_SET";
+    private static final String IOS_UDID = IPHONE_14_IOS_UDID;
+    private static final String IOS_DEVICE_NAME = IPHONE_14_IOS_DEVICE_NAME;
+    private static final String IOS_PLATFORM_VERSION = IPHONE_14_IOS_PLATFORM_VERSION;
 
     @BeforeAll
     static void beforeAll() {
@@ -120,7 +115,7 @@ public class Hooks {
         // Use any port, in case the default 4723 is already taken (maybe by another Appium server)
         serviceBuilder.usingAnyFreePort();
         serviceBuilder.withAppiumJS(new File("./node_modules/appium/build/lib/main.js"));
-        serviceBuilder.withLogFile(new File("./target/appium_logs.txt"));
+        serviceBuilder.withLogFile(new File(System.getenv("LOG_DIR") + "/appium_logs.txt"));
         serviceBuilder.withArgument(GeneralServerFlag.ALLOW_INSECURE, "adb_shell");
         serviceBuilder.withArgument(GeneralServerFlag.RELAXED_SECURITY);
 
@@ -153,14 +148,12 @@ public class Hooks {
         xcuiTestOptions.setCapability(XCUITestOptions.PRINT_PAGE_SOURCE_ON_FIND_FAILURE_OPTION, true);
         xcuiTestOptions.setCapability(XCUITestOptions.AUTO_ACCEPT_ALERTS_OPTION, true);
         if (IS_NATIVE) {
-            if (IOS_APP.equals(HELLO_WORLD)) {
-                if (IS_NML) {
-                    xcuiTestOptions.setCapability("app", System.getProperty("user.dir") + "/sampleApps/dist/HelloWorldiOS-instrumented.app");
-                    System.out.printf("Add devices to NML configuration using capabilities: %%n%s%n", xcuiTestOptions);
-                    Eyes.setMobileCapabilities(xcuiTestOptions, APPLITOOLS_API_KEY);
-                } else {
-                    xcuiTestOptions.setCapability("app", System.getProperty("user.dir") + "/sampleApps/eyes-ios-hello-world.zip");
-                }
+            if (IS_NML) {
+                xcuiTestOptions.setCapability("app", System.getProperty("user.dir") + "/sampleApps/dist/HelloWorldiOS-instrumented.app");
+                System.out.printf("Add devices to NML configuration using capabilities: %%n%s%n", xcuiTestOptions);
+                Eyes.setMobileCapabilities(xcuiTestOptions, APPLITOOLS_API_KEY);
+            } else {
+                xcuiTestOptions.setCapability("app", System.getProperty("user.dir") + "/sampleApps/eyes-ios-hello-world.zip");
             }
         } else {
             xcuiTestOptions.setCapability(XCUITestOptions.BROWSER_NAME_OPTION, "safari");
@@ -223,19 +216,20 @@ public class Hooks {
     private void configureEyes(TestInfo testInfo) {
         System.out.println("Setup Eyes configuration");
         eyes = new Eyes();
-        eyes.setApiKey(APPLITOOLS_API_KEY);
-        eyes.setServerUrl("https://eyes.applitools.com");
-        eyes.setMatchLevel(MatchLevel.STRICT);
+        eyes.setLogHandler(new StdoutLogHandler(true));
         eyes.setBatch(batch);
         eyes.setBranchName("main");
-        eyes.setIsDisabled(!IS_EYES_ENABLED);
-        eyes.setIgnoreCaret(true);
-        eyes.setIgnoreDisplacements(true);
-        eyes.setLogHandler(new StdoutLogHandler(true));
+        eyes.setEnvName("prod");
         eyes.addProperty("username", userName);
-        eyes.setSaveNewTests(false);
+        Configuration configuration = eyes.getConfiguration();
+        configuration.setApiKey(APPLITOOLS_API_KEY);
+        configuration.setServerUrl("https://eyes.applitools.com");
+        configuration.setMatchLevel(MatchLevel.STRICT);
+        configuration.setIsDisabled(!IS_EYES_ENABLED);
+        configuration.setIgnoreCaret(true);
+        configuration.setIgnoreDisplacements(true);
+        configuration.setSaveNewTests(false);
         if (IS_NML) {
-            Configuration configuration = eyes.getConfiguration();
             if (PLATFORM_NAME.equalsIgnoreCase("android")) {
                 configuration.addMobileDevice(new AndroidDeviceInfo(AndroidDeviceName.Galaxy_S22_Plus));
                 configuration.addMobileDevice(new AndroidDeviceInfo(AndroidDeviceName.Galaxy_Note_10_Plus));
@@ -244,8 +238,8 @@ public class Hooks {
                 configuration.addMobileDevice(new IosDeviceInfo(IosDeviceName.iPhone_SE_3));
                 configuration.addMobileDevice(new IosDeviceInfo(IosDeviceName.iPhone_15_Pro_Max));
             }
-            eyes.setConfiguration(configuration);
         }
+        eyes.setConfiguration(configuration);
         eyes.open(driver, className, testInfo.getDisplayName());
     }
 }
