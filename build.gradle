@@ -4,9 +4,9 @@ import java.text.SimpleDateFormat
 buildscript {
     ext {
         gradleVersion = '8.7'
-        junitVersion = '5.10.2'
-        applitoolsVersion = '5.67.2'
-        appiumJavaClientVersion = '9.1.0'
+        junitVersion = '5.11.0-M2'
+        applitoolsVersion = '5.67.8'
+        appiumJavaClientVersion = '9.2.2'
     }
     repositories {
         mavenLocal()
