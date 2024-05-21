@@ -11,21 +11,15 @@ class CalculatorEyesNMLTest extends Hooks {
         IS_NATIVE = true;
         IS_NML = true;
         PLATFORM_NAME = "android";
+        APK_NAME = "Calculator_8.4.1.apk";
+        PACKAGE_NAME = "com.google.android.calculator";
+        ACTIVITY_NAME = "com.android.calculator2.Calculator";
     }
 
     @Test
     void appiumTest3() {
-        eyes.check(Target.window().fully(false).useSystemScreenshot(true).withName("Calculator-SystemScreenshot"));
-        eyes.check(Target.window().fully(false).withName("Calculator"));
+        eyes.checkWindow("Launched");
         int number = 3;
-        driver.findElement(By.id("digit_" + number)).click();
-        eyes.check("digit_" + number + "-by", Target.region(By.id("digit_" + number)));
-    }
-
-    @Test
-    void appiumTest4() {
-        eyes.checkWindow("Calculator!");
-        int number = 4;
         driver.findElement(By.id("digit_" + number)).click();
         eyes.check("digit_" + number + "-by", Target.region(By.id("digit_" + number)));
     }

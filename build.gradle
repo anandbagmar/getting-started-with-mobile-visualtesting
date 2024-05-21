@@ -28,10 +28,10 @@ compileJava { options.encoding = "UTF-8" }
 
 dependencies {
     implementation ("com.applitools:eyes-appium-java5:$project.applitoolsVersion") {
-        exclude group: 'io.appium', module: 'java-client'
+//        exclude group: 'io.appium', module: 'java-client'
     }
     implementation "org.junit.jupiter:junit-jupiter:$project.junitVersion"
-    implementation "io.appium:java-client:$project.appiumJavaClientVersion"
+//    implementation "io.appium:java-client:$project.appiumJavaClientVersion"
 }
 
 static def getCurrentDatestamp() {

@@ -1,18 +1,26 @@
 package io.samples;
 
-import com.applitools.eyes.*;
-import com.applitools.eyes.appium.AppiumRunner;
+import com.applitools.eyes.BatchInfo;
+import com.applitools.eyes.MatchLevel;
+import com.applitools.eyes.StdoutLogHandler;
+import com.applitools.eyes.TestResults;
+import com.applitools.eyes.TestResultsStatus;
 import com.applitools.eyes.appium.Eyes;
-import com.applitools.eyes.config.Configuration;
-import com.applitools.eyes.visualgrid.model.*;
+import com.applitools.eyes.visualgrid.model.IosDeviceInfo;
+import com.applitools.eyes.visualgrid.model.IosDeviceName;
 import io.appium.java_client.AppiumDriver;
+import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.android.options.UiAutomator2Options;
 import io.appium.java_client.ios.options.XCUITestOptions;
 import io.appium.java_client.service.local.AppiumDriverLocalService;
 import io.appium.java_client.service.local.AppiumServiceBuilder;
 import io.appium.java_client.service.local.flags.GeneralServerFlag;
-import org.junit.jupiter.api.*;
-import org.openqa.selenium.Capabilities;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.TestInfo;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
 import java.io.File;
@@ -20,7 +28,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.Duration;
 import java.util.Date;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Hooks {
 
@@ -37,6 +44,9 @@ public class Hooks {
     protected static boolean IS_NATIVE = true;
     protected static boolean IS_NML = false;
     protected static String PLATFORM_NAME = "android";
+    protected static String APK_NAME = "not-set";
+    protected static String PACKAGE_NAME = "not-set";
+    protected static String ACTIVITY_NAME = "not-set";
 
     private static final String IPHONE_6S_IOS_DEVICE_NAME = "iPhone";
     private static final String IPHONE_6S_IOS_PLATFORM_VERSION = "17.0";
@@ -124,8 +134,7 @@ public class Hooks {
 
         localAppiumServer.start();
         APPIUM_SERVER_URL = localAppiumServer.getUrl().toString();
-        System.out.printf("Appium server started on url: '%s'%n",
-                localAppiumServer.getUrl().toString());
+        System.out.printf("Appium server started on url: '%s'%n", localAppiumServer.getUrl().toString());
     }
 
     void setUpiOS(TestInfo testInfo) {
@@ -133,7 +142,7 @@ public class Hooks {
         System.out.printf("Create AppiumDriver for iOS test - %s%n", APPIUM_SERVER_URL);
 
         // Appium 2.x
-//        XCUITestOptions xcuiTestOptions = new XCUITestOptions();
+        //        XCUITestOptions xcuiTestOptions = new XCUITestOptions();
         DesiredCapabilities xcuiTestOptions = new DesiredCapabilities();
         xcuiTestOptions.setCapability("platformName", "iOS");
         xcuiTestOptions.setCapability("appium:automationName", "XCUITest");
@@ -141,7 +150,7 @@ public class Hooks {
         xcuiTestOptions.setCapability(XCUITestOptions.DEVICE_NAME_OPTION, IOS_DEVICE_NAME);
         xcuiTestOptions.setCapability(XCUITestOptions.UDID_OPTION, IOS_UDID);
         xcuiTestOptions.setCapability(XCUITestOptions.FULL_RESET_OPTION, true);
-//        xcuiTestOptions.setCapability(XCUITestOptions.NO_RESET_OPTION, false);
+        //        xcuiTestOptions.setCapability(XCUITestOptions.NO_RESET_OPTION, false);
 
         xcuiTestOptions.setCapability(XCUITestOptions.SHOW_XCODE_LOG_OPTION, false);
         xcuiTestOptions.setCapability(XCUITestOptions.SHOW_IOS_LOG_OPTION, false);
@@ -177,7 +186,7 @@ public class Hooks {
         System.out.printf("Create AppiumDriver for android test - %s%n", APPIUM_SERVER_URL);
         // Appium 2.x
         DesiredCapabilities uiAutomator2Options = new DesiredCapabilities();
-//        UiAutomator2Options uiAutomator2Options = new UiAutomator2Options();
+        //        UiAutomator2Options uiAutomator2Options = new UiAutomator2Options();
         uiAutomator2Options.setCapability("platformName", "Android");
 
         uiAutomator2Options.setCapability(UiAutomator2Options.AUTOMATION_NAME_OPTION, "UiAutomator2");
@@ -185,25 +194,27 @@ public class Hooks {
         uiAutomator2Options.setCapability(UiAutomator2Options.PRINT_PAGE_SOURCE_ON_FIND_FAILURE_OPTION, true);
         if (IS_NATIVE) {
             uiAutomator2Options.setCapability(UiAutomator2Options.AUTO_GRANT_PERMISSIONS_OPTION, true);
-            uiAutomator2Options.setCapability(UiAutomator2Options.FULL_RESET_OPTION, true);
-            uiAutomator2Options.setCapability(UiAutomator2Options.NO_RESET_OPTION, false);
-            uiAutomator2Options.setCapability("nativeWebScreenshot", true);
-//            uiAutomator2Options.setCapability(UiAutomator2Options.APP_PACKAGE_OPTION, "com.google.android.calculator");
-//            uiAutomator2Options.setCapability(UiAutomator2Options.APP_ACTIVITY_OPTION, "com.android.calculator2.Calculator");
+            uiAutomator2Options.setCapability(UiAutomator2Options.FULL_RESET_OPTION, false);
+            //            uiAutomator2Options.setCapability(UiAutomator2Options.NO_RESET_OPTION, true);
+            //            uiAutomator2Options.setCapability("nativeWebScreenshot", true);
             if (IS_NML) {
-                uiAutomator2Options.setCapability(UiAutomator2Options.APP_OPTION, new File("./sampleApps/dist/Calculator_8.4.1.apk").getAbsolutePath());
+                uiAutomator2Options.setCapability(UiAutomator2Options.APP_OPTION, new File("sampleApps/dist/" + APK_NAME).getAbsolutePath());
                 System.out.printf("Add devices to NML configuration using capabilities: %%n%s%n", uiAutomator2Options);
                 Eyes.setMobileCapabilities(uiAutomator2Options, APPLITOOLS_API_KEY);
             } else {
-                uiAutomator2Options.setCapability(UiAutomator2Options.APP_OPTION, new File("./sampleApps/Calculator_8.4.1.apk").getAbsolutePath());
+                uiAutomator2Options.setCapability(UiAutomator2Options.APP_OPTION, new File("sampleApps/" + APK_NAME).getAbsolutePath());
             }
         } else {
             uiAutomator2Options.setCapability(UiAutomator2Options.BROWSER_NAME_OPTION, "chrome");
         }
 
-        System.out.println("UiAutomator2Options: " + uiAutomator2Options);
+        System.out.println("UiAutomator2Options:");
+        for (String capabilityName : uiAutomator2Options.getCapabilityNames()) {
+            System.out.println("\t" + capabilityName + ": " + uiAutomator2Options.getCapability(capabilityName));
+        }
+
         try {
-            driver = new AppiumDriver(new URL(APPIUM_SERVER_URL), uiAutomator2Options);
+            driver = new AndroidDriver(new URL(APPIUM_SERVER_URL), uiAutomator2Options);
             driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(1L));
         } catch (MalformedURLException e) {
             System.err.println("Error creating Appium driver for android device with capabilities: " + uiAutomator2Options);
@@ -216,30 +227,29 @@ public class Hooks {
     private void configureEyes(TestInfo testInfo) {
         System.out.println("Setup Eyes configuration");
         eyes = new Eyes();
+
         eyes.setLogHandler(new StdoutLogHandler(true));
         eyes.setBatch(batch);
         eyes.setBranchName("main");
         eyes.setEnvName("prod");
         eyes.addProperty("username", userName);
-        Configuration configuration = eyes.getConfiguration();
-        configuration.setApiKey(APPLITOOLS_API_KEY);
-        configuration.setServerUrl("https://eyes.applitools.com");
-        configuration.setMatchLevel(MatchLevel.STRICT);
-        configuration.setIsDisabled(!IS_EYES_ENABLED);
-        configuration.setIgnoreCaret(true);
-        configuration.setIgnoreDisplacements(true);
-        configuration.setSaveNewTests(false);
+        eyes.setApiKey(APPLITOOLS_API_KEY);
+        eyes.setServerUrl("https://eyes.applitools.com");
+        eyes.setMatchLevel(MatchLevel.STRICT);
+        eyes.setIsDisabled(!IS_EYES_ENABLED);
+        eyes.setIgnoreCaret(true);
+        eyes.setIgnoreDisplacements(true);
+        eyes.setSaveNewTests(false);
         if (IS_NML) {
             if (PLATFORM_NAME.equalsIgnoreCase("android")) {
-                configuration.addMobileDevice(new AndroidDeviceInfo(AndroidDeviceName.Galaxy_S22_Plus));
-                configuration.addMobileDevice(new AndroidDeviceInfo(AndroidDeviceName.Galaxy_Note_10_Plus));
+                //                eyes.setConfiguration(eyes.getConfiguration().addMobileDevice(new AndroidDeviceInfo(AndroidDeviceName.Galaxy_S10_Plus)));
+                //                eyes.setConfiguration(eyes.getConfiguration().addMobileDevice(new AndroidDeviceInfo(AndroidDeviceName.Galaxy_S21)));
             } else {
-                configuration.addMobileDevice(new IosDeviceInfo(IosDeviceName.iPhone_12_mini));
-                configuration.addMobileDevice(new IosDeviceInfo(IosDeviceName.iPhone_SE_3));
-                configuration.addMobileDevice(new IosDeviceInfo(IosDeviceName.iPhone_15_Pro_Max));
+                eyes.setConfiguration(eyes.getConfiguration().addMobileDevice(new IosDeviceInfo(IosDeviceName.iPhone_12_mini)));
+                eyes.setConfiguration(eyes.getConfiguration().addMobileDevice(new IosDeviceInfo(IosDeviceName.iPhone_SE_3)));
+                eyes.setConfiguration(eyes.getConfiguration().addMobileDevice(new IosDeviceInfo(IosDeviceName.iPhone_15_Pro_Max)));
             }
         }
-        eyes.setConfiguration(configuration);
         eyes.open(driver, className, testInfo.getDisplayName());
     }
 }

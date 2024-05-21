@@ -1,5 +1,13 @@
 package io.samples;
 
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+import java.time.Duration;
+
 public class Wait {
 
     public static void waitFor(int durationInSec) {
@@ -10,4 +18,9 @@ public class Wait {
             e.printStackTrace();
         }
     }
+
+    public static WebElement waitTillElementIsPresent(WebDriver driver, By elementId, int numberOfSecondsToWait) {
+        return (new WebDriverWait(driver, Duration.ofSeconds(numberOfSecondsToWait)).until(ExpectedConditions.presenceOfElementLocated(elementId)));
+    }
+
 }
