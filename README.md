@@ -9,27 +9,6 @@ If you want example visual UI tests for a browser-based web application, try
 [Anand Bagmar's getting-started-with-visualtesting repo](https://github.com/anandbagmar/getting-started-with-visualtesting)
 instead.
 
-## Setup
-
-Once you've pulled this project, you'll need to install the Appium service on your
-system, and add the Applitools Eyes Appium SDK to the project using Apache Maven.
-
-### Build the project
-
-Most IDEs will detect the `pom.xml` file in this project's root directory and recognize
-it as a Maven project when you first open it and/or add it to a workspace.  If you've
-opened the project in the Eclipse IDE or Jet Brains IDEA, it should download all the 
-dependency JARs it needs over the Internet from the Maven Central repository and compile 
-the project automatically.
-
-**Or** run this command from a terminal prompt in the project root directory to install all 
-the projects dependencies and compile its source code using the Maven command-line tool.
-```bash
-./mvnw compile
-```
-
-***Note:*** the above command will _not_ run the tests.
-
 ### Install Appium and related drivers & plugins
 
 The NPM package manager can install the Appium service package and all of its related 
@@ -40,10 +19,6 @@ Run this command from a terminal prompt in the project root directory where the
 ```bash
 npm install
 ```
-
-### Install and configure Android Studio
-
-Installation and setup instructions for Android Studio here.
 
 ## Usage
 
