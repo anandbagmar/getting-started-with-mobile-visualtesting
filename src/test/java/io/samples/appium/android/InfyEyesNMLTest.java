@@ -29,6 +29,7 @@ import java.time.Duration;
 import java.util.Date;
 
 import static io.samples.Wait.waitFor;
+import static io.samples.Wait.waitTillElementIsPresent;
 
 class InfyEyesNMLTest {
     private static final String className = "AppiumTest";
@@ -180,11 +181,10 @@ class InfyEyesNMLTest {
     void infyTest() {
         System.out.println("1");
         eyes.check("App Launched", Target.window().fully(false));
-        System.out.println("2. Click Join");
-        waitFor(30);
-        System.out.println("3");
+        System.out.println("Click Join");
+        waitTillElementIsPresent(driver, AppiumBy.xpath("//android.widget.Button[@text=\"Login\"]"), 10).click();
+        waitFor(5);
         eyes.check("Join", Target.window().fully(false));
-        System.out.println("4");
+        System.out.println("Done");
     }
-
 }
