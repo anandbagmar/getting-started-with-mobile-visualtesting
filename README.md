@@ -145,7 +145,7 @@ goal by executing the following command.
    ./gradlew clean test --tests AppiumNativeiOSHelloWorldEyesTest
    ```
   
-  * [AppiumNativeiOSHelloWorldEyesNMLTest.java](src/test/java/io/samples/appium/ios/AppiumNativeiOSHelloWorldEyesNMLTest.java) - A basic appium test *with* Applitools Eyes and uses the *Native Mobile Library and MultiViewPort capability* of Applitools for a native iOS app
-     ```bash
-     ./gradlew clean test --tests AppiumNativeiOSHelloWorldEyesNMLTest
-     ```
+* [AppiumNativeiOSHelloWorldEyesNMLTest.java](src/test/java/io/samples/appium/ios/AppiumNativeiOSHelloWorldEyesNMLTest.java) - A basic appium test *with* Applitools Eyes and uses the *Native Mobile Library and MultiViewPort capability* of Applitools for a native iOS app
+   ```bash
+   ./gradlew clean test --tests AppiumNativeiOSHelloWorldEyesNMLTest
+   ```
