@@ -47,7 +47,8 @@ class InfyEyesNMLTest {
     protected static String APK_NAME = "MB_REF_MAY_9.apk";
     protected static final String APPLITOOLSIFY_RELEASE_VERSION = "release";
     protected static final String APPLITOOLSIFY_3_0_9_VERSION = "3.0.9";
-    protected static final String APPLITOOLSIFY_VERSION = APPLITOOLSIFY_RELEASE_VERSION;
+    protected static final String APPLITOOLSIFY_3_0_17_VERSION = "3.0.17";
+    protected static final String APPLITOOLSIFY_VERSION = APPLITOOLSIFY_3_0_17_VERSION;
 
     private InfyEyesNMLTest() {
     }
@@ -129,7 +130,7 @@ class InfyEyesNMLTest {
         uiAutomator2Options.setCapability(UiAutomator2Options.PRINT_PAGE_SOURCE_ON_FIND_FAILURE_OPTION, true);
         uiAutomator2Options.setCapability(UiAutomator2Options.AUTO_GRANT_PERMISSIONS_OPTION, true);
         uiAutomator2Options.setCapability(UiAutomator2Options.FULL_RESET_OPTION, true);
-        uiAutomator2Options.setCapability(UiAutomator2Options.NEW_COMMAND_TIMEOUT_OPTION, 15);
+        uiAutomator2Options.setCapability(UiAutomator2Options.NEW_COMMAND_TIMEOUT_OPTION, 60);
         //        uiAutomator2Options.setCapability("nativeWebScreenshot", true);
         if (IS_NML) {
             uiAutomator2Options.setCapability(UiAutomator2Options.APP_OPTION, new File("sampleApps/dist-" + APPLITOOLSIFY_VERSION + "/" + APK_NAME).getAbsolutePath());
@@ -178,13 +179,13 @@ class InfyEyesNMLTest {
     }
 
     @Test
-    void infyTest() {
-        System.out.println("1");
-        eyes.check("App Launched", Target.window().fully(false));
+    void infyNMLTest() {
+        System.out.println("App Launched");
+        eyes.checkWindow("App Launched");
         System.out.println("Click Join");
         waitTillElementIsPresent(driver, AppiumBy.xpath("//android.widget.Button[@text=\"Login\"]"), 10).click();
         waitFor(5);
-        eyes.check("Join", Target.window().fully(false));
+        eyes.checkWindow("Join");
         System.out.println("Done");
     }
 }

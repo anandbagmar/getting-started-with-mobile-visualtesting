@@ -6,6 +6,8 @@ import com.applitools.eyes.StdoutLogHandler;
 import com.applitools.eyes.TestResults;
 import com.applitools.eyes.TestResultsStatus;
 import com.applitools.eyes.appium.Eyes;
+import com.applitools.eyes.visualgrid.model.AndroidDeviceInfo;
+import com.applitools.eyes.visualgrid.model.AndroidDeviceName;
 import com.applitools.eyes.visualgrid.model.IosDeviceInfo;
 import com.applitools.eyes.visualgrid.model.IosDeviceName;
 import io.appium.java_client.AppiumDriver;
@@ -198,7 +200,7 @@ public class Hooks {
             //            uiAutomator2Options.setCapability(UiAutomator2Options.NO_RESET_OPTION, true);
             //            uiAutomator2Options.setCapability("nativeWebScreenshot", true);
             if (IS_NML) {
-                uiAutomator2Options.setCapability(UiAutomator2Options.APP_OPTION, new File("sampleApps/dist/" + APK_NAME).getAbsolutePath());
+                uiAutomator2Options.setCapability(UiAutomator2Options.APP_OPTION, new File("sampleApps/dist-3.0.17/" + APK_NAME).getAbsolutePath());
                 System.out.printf("Add devices to NML configuration using capabilities: %%n%s%n", uiAutomator2Options);
                 Eyes.setMobileCapabilities(uiAutomator2Options, APPLITOOLS_API_KEY);
             } else {
@@ -242,8 +244,8 @@ public class Hooks {
         eyes.setSaveNewTests(false);
         if (IS_NML) {
             if (PLATFORM_NAME.equalsIgnoreCase("android")) {
-                //                eyes.setConfiguration(eyes.getConfiguration().addMobileDevice(new AndroidDeviceInfo(AndroidDeviceName.Galaxy_S10_Plus)));
-                //                eyes.setConfiguration(eyes.getConfiguration().addMobileDevice(new AndroidDeviceInfo(AndroidDeviceName.Galaxy_S21)));
+                eyes.setConfiguration(eyes.getConfiguration().addMobileDevice(new AndroidDeviceInfo(AndroidDeviceName.Galaxy_S10_Plus)));
+                eyes.setConfiguration(eyes.getConfiguration().addMobileDevice(new AndroidDeviceInfo(AndroidDeviceName.Galaxy_S21)));
             } else {
                 eyes.setConfiguration(eyes.getConfiguration().addMobileDevice(new IosDeviceInfo(IosDeviceName.iPhone_12_mini)));
                 eyes.setConfiguration(eyes.getConfiguration().addMobileDevice(new IosDeviceInfo(IosDeviceName.iPhone_SE_3)));

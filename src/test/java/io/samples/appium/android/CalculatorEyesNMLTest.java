@@ -2,6 +2,7 @@ package io.samples.appium.android;
 
 import com.applitools.eyes.appium.Target;
 import io.samples.Hooks;
+import io.samples.Wait;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
 
@@ -17,10 +18,14 @@ class CalculatorEyesNMLTest extends Hooks {
     }
 
     @Test
-    void appiumTest3() {
+    void calcNMLTest() {
+        System.out.println("Launched");
         eyes.checkWindow("Launched");
         int number = 3;
         driver.findElement(By.id("digit_" + number)).click();
-        eyes.check("digit_" + number + "-by", Target.region(By.id("digit_" + number)));
+        System.out.println("Clicked 3");
+        eyes.check("digit_" + number + "-by", Target.window().layout(By.id("digit_" + number)));
+        Wait.waitFor(5);
+        System.out.println("Done clicked 3");
     }
 }
