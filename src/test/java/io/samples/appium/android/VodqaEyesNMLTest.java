@@ -30,7 +30,7 @@ import java.util.Date;
 import static io.samples.Wait.waitFor;
 import static io.samples.Wait.waitTillElementIsPresent;
 
-class VodqaNMLTest {
+class VodqaEyesNMLTest {
     private static final String className = "AppiumTest";
     private static final long epochSecond = new Date().toInstant().getEpochSecond();
     private static final String userName = System.getProperty("user.name");
@@ -45,7 +45,7 @@ class VodqaNMLTest {
     protected static String PLATFORM_NAME = "android";
     protected static String APK_NAME = "VodQA.apk";
 
-    private VodqaNMLTest() {
+    private VodqaEyesNMLTest() {
     }
 
     @BeforeAll
@@ -127,7 +127,7 @@ class VodqaNMLTest {
         uiAutomator2Options.setCapability(UiAutomator2Options.FULL_RESET_OPTION, true);
         //        uiAutomator2Options.setCapability("nativeWebScreenshot", true);
         if (IS_NML) {
-            uiAutomator2Options.setCapability(UiAutomator2Options.APP_OPTION, new File("sampleApps/dist/" + APK_NAME).getAbsolutePath());
+            uiAutomator2Options.setCapability(UiAutomator2Options.APP_OPTION, new File("sampleApps/dist-3.0.17/" + APK_NAME).getAbsolutePath());
             System.out.printf("Add devices to NML configuration using capabilities: %%n%s%n", uiAutomator2Options);
             Eyes.setMobileCapabilities(uiAutomator2Options, APPLITOOLS_API_KEY);
         } else {
