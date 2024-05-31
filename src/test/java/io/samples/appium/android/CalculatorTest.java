@@ -1,7 +1,10 @@
 package io.samples.appium.android;
 
-import com.applitools.eyes.BatchInfo;
+import com.applitools.eyes.*;
 import com.applitools.eyes.appium.Eyes;
+import com.applitools.eyes.appium.Target;
+import com.applitools.eyes.visualgrid.model.AndroidDeviceInfo;
+import com.applitools.eyes.visualgrid.model.AndroidDeviceName;
 import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.android.options.UiAutomator2Options;
@@ -23,19 +26,26 @@ class CalculatorTest {
     private static final long epochSecond = new Date().toInstant().getEpochSecond();
     private static final String userName = System.getProperty("user.name");
     private static BatchInfo batch;
+    private final String APPLITOOLS_API_KEY = System.getenv("APPLITOOLS_API_KEY");
     private AppiumDriver driver;
+    private Eyes eyes;
     private static String APPIUM_SERVER_URL = "http://localhost:4723/wd/hub/";
     private static AppiumDriverLocalService localAppiumServer;
     private static String APK_NAME = "sampleApps" + File.separator + "Calculator_8.4.1.apk";
-    private static final boolean IS_FULL_RESET = true;
+    private static String APK_WITH_NML_NAME = "sampleApps" + File.separator + "dist" + File.separator + "Calculator_8.4.1.apk";
 
-    CalculatorTest() {
+    private static boolean IS_EYES_ENABLED = false;
+    private static final boolean IS_FULL_RESET = true;
+    private static boolean IS_NML = false;
+    private static final boolean IS_MULTI_DEVICE = false;
+
+    private CalculatorTest() {
     }
 
     @BeforeAll
     static void beforeAll() {
         startAppiumServer();
-        String batchName = userName + "-" + className;
+        String batchName = className + "-NML=" + IS_NML + "-MULTI_DEVICE=" + IS_MULTI_DEVICE + "-" + new File(APK_NAME).getName();
         batch = new BatchInfo(batchName);
         batch.setId(String.valueOf(epochSecond));
         batch.addProperty("REPOSITORY_NAME", new File(System.getProperty("user.dir")).getName());
@@ -66,9 +76,18 @@ class CalculatorTest {
     @AfterEach
     void tearDown(TestInfo testInfo) {
         System.out.println("AfterEach: Test - " + testInfo.getTestMethod().get().getName());
+        boolean isPass = true;
+        if (IS_EYES_ENABLED) {
+            TestResults testResults = eyes.close(false);
+            System.out.printf("Test: %s\n%s%n", testResults.getName(), testResults);
+            if (testResults.getStatus().equals(TestResultsStatus.Failed) || testResults.getStatus().equals(TestResultsStatus.Unresolved)) {
+                isPass = false;
+            }
+        }
         if (null != driver) {
             driver.quit();
         }
+        Assertions.assertTrue(isPass, "Visual differences found.");
     }
 
     private static void startAppiumServer() {
@@ -102,10 +121,13 @@ class CalculatorTest {
         uiAutomator2Options.setCapability(UiAutomator2Options.PRINT_PAGE_SOURCE_ON_FIND_FAILURE_OPTION, true);
         uiAutomator2Options.setCapability(UiAutomator2Options.AUTO_GRANT_PERMISSIONS_OPTION, true);
         uiAutomator2Options.setCapability(UiAutomator2Options.FULL_RESET_OPTION, IS_FULL_RESET);
-        //            uiAutomator2Options.setCapability(UiAutomator2Options.NO_RESET_OPTION, true);
-        //            uiAutomator2Options.setCapability("nativeWebScreenshot", true);
-        uiAutomator2Options.setCapability(UiAutomator2Options.APP_OPTION, new File(APK_NAME).getAbsolutePath());
-
+        if (IS_NML && IS_EYES_ENABLED) {
+            uiAutomator2Options.setCapability(UiAutomator2Options.APP_OPTION, new File(APK_WITH_NML_NAME).getAbsolutePath());
+            System.out.printf("Add devices to NML configuration using capabilities: %%n%s%n", uiAutomator2Options);
+            Eyes.setMobileCapabilities(uiAutomator2Options, APPLITOOLS_API_KEY);
+        } else {
+            uiAutomator2Options.setCapability(UiAutomator2Options.APP_OPTION, new File(APK_NAME).getAbsolutePath());
+        }
         System.out.println("UiAutomator2Options:");
         for (String capabilityName : uiAutomator2Options.getCapabilityNames()) {
             System.out.println("\t" + capabilityName + ": " + uiAutomator2Options.getCapability(capabilityName));
@@ -119,16 +141,74 @@ class CalculatorTest {
             throw new RuntimeException(e);
         }
         System.out.printf("Created AppiumDriver for - %s%n", APPIUM_SERVER_URL);
+        configureEyes(testInfo);
+    }
+
+    private void configureEyes(TestInfo testInfo) {
+        System.out.println("Setup Eyes configuration");
+        eyes = new Eyes();
+
+        eyes.setLogHandler(new StdoutLogHandler(true));
+        eyes.setBatch(batch);
+        eyes.setBranchName("main");
+        eyes.setEnvName("prod");
+        eyes.addProperty("username", userName);
+        eyes.setApiKey(APPLITOOLS_API_KEY);
+        eyes.setServerUrl("https://eyes.applitools.com");
+        eyes.setMatchLevel(MatchLevel.STRICT);
+        eyes.setIsDisabled(!IS_EYES_ENABLED);
+        eyes.setIgnoreCaret(true);
+        eyes.setIgnoreDisplacements(true);
+        eyes.setSaveNewTests(false);
+        if (IS_NML && IS_MULTI_DEVICE) {
+            eyes.setConfiguration(eyes.getConfiguration().addMobileDevice(new AndroidDeviceInfo(AndroidDeviceName.Galaxy_S10_Plus)));
+            eyes.setConfiguration(eyes.getConfiguration().addMobileDevice(new AndroidDeviceInfo(AndroidDeviceName.Galaxy_S21)));
+        }
+        eyes.open(driver, className, testInfo.getTestMethod().get().getName());
     }
 
     @Test
-    void calculatorTest() {
+    void calculatorTest_id() {
+        eyes.check("Calculator!-ignoreCaret", Target.window().ignoreCaret(true));
+        eyes.checkWindow("Calculator!");
+
         int p1 = 3;
         int p2 = 5;
+
         driver.findElement(By.id("digit_" + p1)).click();
+        eyes.check("digit_" + p1 + "-byElement", Target.region(By.id("digit_" + p1)));
+        eyes.check("digit_" + p1 + "-by", Target.window().layout(By.id("digit_" + p1)));
+
         driver.findElement(By.id("op_add")).click();
+        eyes.check("op_add-byElement", Target.region(By.id("op_add")));
+
         driver.findElement(By.id("digit_" + p2)).click();
+        eyes.check("digit_" + p2 + "-byElement", Target.region(By.id("digit_" + p2)));
+
         driver.findElement(By.id("eq")).click();
-        Assertions.assertTrue(true, "Test completed. Assertions will be done by Applitools");
+        eyes.check("eq-ignoreCaret", Target.window().ignoreCaret(true));
+        eyes.checkWindow("eq");
+    }
+
+    @Test
+    void calculatorTest_full() {
+        eyes.check("Calculator!-ignoreCaret", Target.window().ignoreCaret(true));
+        eyes.checkWindow("Calculator!");
+
+        int p1 = 5;
+        int p2 = 6;
+
+        driver.findElement(By.id("digit_" + p1)).click();
+        eyes.check("digit_" + p1 + "-byElement", Target.region(driver.findElement(By.id("digit_" + p1))));
+
+        driver.findElement(By.id("op_add")).click();
+        eyes.check("op_add-byElement", Target.region(driver.findElement(By.id("op_add"))));
+
+        driver.findElement(By.id("digit_" + p2)).click();
+        eyes.check("digit_" + p2 + "-byElement", Target.region(driver.findElement(By.id("digit_" + p2))));
+
+        driver.findElement(By.id("eq")).click();
+        eyes.check("eq-ignoreCaret", Target.window().ignoreCaret(true));
+        eyes.checkWindow("eq");
     }
 }

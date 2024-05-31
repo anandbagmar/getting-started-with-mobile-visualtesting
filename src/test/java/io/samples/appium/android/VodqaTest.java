@@ -31,9 +31,8 @@ class VodqaTest {
     private Eyes eyes;
     private static String APPIUM_SERVER_URL = "http://localhost:4723/wd/hub/";
     private static AppiumDriverLocalService localAppiumServer;
-    private static final String APPLITOOLSIFY_DIR_NAME = "dist-3.0.18";
     private static String APK_NAME = "sampleApps" + File.separator + "VodQA.apk";
-    private static String APK_WITH_NML_NAME = "sampleApps" + File.separator + APPLITOOLSIFY_DIR_NAME + File.separator + "VodQA.apk";
+    private static String APK_WITH_NML_NAME = "sampleApps" + File.separator + "dist" + File.separator + "VodQA.apk";
 
     private static boolean IS_EYES_ENABLED = true;
     private static boolean IS_NML = true;
