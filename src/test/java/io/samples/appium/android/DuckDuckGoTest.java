@@ -182,7 +182,7 @@ class DuckDuckGoTest {
         eyes.checkWindow("Cancel Default Browser Update");
         cancelDefaultBrowserUpdateElement.click();
 
-        Wait.waitFor(3);
+        Wait.waitFor(5);
         WebElement menuElement = Wait.waitTillElementIsPresent(driver, AppiumBy.id("com.duckduckgo.mobile.android:id/browserMenuImageView"));
         eyes.checkWindow("Menu");
         menuElement.click();
