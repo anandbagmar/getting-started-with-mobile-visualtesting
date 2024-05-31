@@ -19,6 +19,10 @@ public class Wait {
         }
     }
 
+    public static WebElement waitTillElementIsPresent(WebDriver driver, By elementId) {
+        return waitTillElementIsPresent(driver, elementId, 10);
+    }
+
     public static WebElement waitTillElementIsPresent(WebDriver driver, By elementId, int numberOfSecondsToWait) {
         return (new WebDriverWait(driver, Duration.ofSeconds(numberOfSecondsToWait)).until(ExpectedConditions.presenceOfElementLocated(elementId)));
     }

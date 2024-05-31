@@ -96,7 +96,7 @@ public class Hooks {
 
     @BeforeEach
     public void beforeEach(TestInfo testInfo) {
-        System.out.printf("Test: %s - BeforeEach%n", testInfo.getDisplayName());
+        System.out.printf("Test: %s - BeforeEach%n", testInfo.getTestMethod().get().getName());
         if (PLATFORM_NAME.equalsIgnoreCase("android")) {
             setUpAndroid(testInfo);
         } else {
@@ -106,7 +106,7 @@ public class Hooks {
 
     @AfterEach
     void tearDown(TestInfo testInfo) {
-        System.out.println("AfterEach: Test - " + testInfo.getDisplayName());
+        System.out.println("AfterEach: Test - " + testInfo.getTestMethod().get().getName());
         boolean isPass = true;
         if (IS_EYES_ENABLED) {
             TestResults testResults = eyes.close(false);
@@ -140,7 +140,7 @@ public class Hooks {
     }
 
     void setUpiOS(TestInfo testInfo) {
-        System.out.println("BeforeEach: Test - " + testInfo.getDisplayName());
+        System.out.println("BeforeEach: Test - " + testInfo.getTestMethod().get().getName());
         System.out.printf("Create AppiumDriver for iOS test - %s%n", APPIUM_SERVER_URL);
 
         // Appium 2.x
@@ -184,7 +184,7 @@ public class Hooks {
     }
 
     void setUpAndroid(TestInfo testInfo) {
-        System.out.println("BeforeEach: Test - " + testInfo.getDisplayName());
+        System.out.println("BeforeEach: Test - " + testInfo.getTestMethod().get().getName());
         System.out.printf("Create AppiumDriver for android test - %s%n", APPIUM_SERVER_URL);
         // Appium 2.x
         DesiredCapabilities uiAutomator2Options = new DesiredCapabilities();
@@ -252,6 +252,6 @@ public class Hooks {
                 eyes.setConfiguration(eyes.getConfiguration().addMobileDevice(new IosDeviceInfo(IosDeviceName.iPhone_15_Pro_Max)));
             }
         }
-        eyes.open(driver, className, testInfo.getDisplayName());
+        eyes.open(driver, className, testInfo.getTestMethod().get().getName());
     }
 }
