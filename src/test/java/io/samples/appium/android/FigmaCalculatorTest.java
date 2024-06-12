@@ -155,35 +155,49 @@ class FigmaCalculatorTest {
     @Test
     void calculatorFigmaTest() {
         String appName = "1. PNB Retail Onboarding";
-        String testName = "Android Small - 2582";
+        String testName = "Android Small - 2962";
 
         int p1 = 3;
         int p2 = 5;
         int p3 = 7;
         int p4 = 9;
 
-        eyes.setBaselineEnvName("Android Small - 2582_300");
-        eyes.open(driver, appName, testName);
-        driver.findElement(By.id("digit_" + p1)).click();
-        eyes.checkWindow("Android Small - 2582_300");
-        getResults();
-
-        eyes.setBaselineEnvName("Android Small - 2582_400");
-        eyes.open(driver, appName, testName);
-        driver.findElement(By.id("digit_" + p2)).click();
-        eyes.checkWindow("Android Small - 2582_400");
-        getResults();
-
-        eyes.setBaselineEnvName("Android Small - 2582_411");
+        eyes.setBaselineEnvName("Android Small - 2962_460");
         eyes.open(driver, appName, testName);
         driver.findElement(By.id("digit_" + p3)).click();
-        eyes.checkWindow("Android Small - 2582_411");
+        eyes.checkWindow("Android Small - 2962_460");
         getResults();
 
-        eyes.setBaselineEnvName("Android Small - 2582_800");
+        eyes.setBaselineEnvName("Android Small - 2962_360");
+        eyes.open(driver, appName, testName);
+        driver.findElement(By.id("digit_" + p1)).click();
+        eyes.checkWindow("Android Small - 2962_360");
+        getResults();
+
+        eyes.setBaselineEnvName("Android Small - 2962_400");
+        eyes.open(driver, appName, testName);
+        driver.findElement(By.id("digit_" + p1)).click();
+        eyes.checkWindow("Android Small - 2962_400");
+        getResults();
+
+        eyes.setBaselineEnvName("Android Small - 2962_411");
+        eyes.open(driver, appName, testName);
+        driver.findElement(By.id("digit_" + p2)).click();
+        eyes.checkWindow("Android Small - 2962_411");
+        getResults();
+
+        eyes.setBaselineEnvName("Android Small - 2962_450");
+        eyes.open(driver, appName, testName);
+        driver.findElement(By.id("digit_" + p3)).click();
+        eyes.checkWindow("Android Small - 2962_450");
+        getResults();
+
+
+
+        eyes.setBaselineEnvName("Android Small - 2962_475");
         eyes.open(driver, appName, testName);
         driver.findElement(By.id("digit_" + p4)).click();
-        eyes.checkWindow("Android Small - 2582_800");
+        eyes.checkWindow("Android Small - 2962_475");
         getResults();
     }
 }
