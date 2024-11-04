@@ -153,6 +153,7 @@ class DuckDuckGoTest {
 
         eyes.setLogHandler(new StdoutLogHandler(true));
         eyes.setBatch(batch);
+        eyes.setEnvName("pre-prod");
         eyes.setBranchName("main");
         eyes.setEnvName("prod");
         eyes.addProperty("username", userName);

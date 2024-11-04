@@ -1,12 +1,10 @@
 import org.codehaus.groovy.runtime.GStringImpl
+
 import java.text.SimpleDateFormat
 
 buildscript {
     ext {
         gradleVersion = '8.7'
-        junitVersion = '5.11.0-M2'
-        applitoolsVersion = '5.67.11'
-        appiumJavaClientVersion = '9.2.3'
     }
     repositories {
         mavenLocal()
@@ -27,11 +25,18 @@ repositories {
 compileJava { options.encoding = "UTF-8" }
 
 dependencies {
-    implementation ("com.applitools:eyes-appium-java5:$project.applitoolsVersion") {
-//        exclude group: 'io.appium', module: 'java-client'
-    }
-    implementation "org.junit.jupiter:junit-jupiter:$project.junitVersion"
-//    implementation "io.appium:java-client:$project.appiumJavaClientVersion"
+    implementation "com.applitools:eyes-appium-java5:5.70.0"
+    implementation "org.junit.jupiter:junit-jupiter:5.11.2"
+    implementation 'org.nanohttpd:nanohttpd:2.3.1'
+    implementation 'com.googlecode.libphonenumber:libphonenumber:8.13.42'
+    implementation 'com.google.code.gson:gson:2.11.0'
+    implementation 'jaxen:jaxen:2.0.0'
+    implementation 'org.jsoup:jsoup:1.18.1'
+    implementation 'org.dom4j:dom4j:2.1.4'
+    // https://mvnrepository.com/artifact/com.squareup.okhttp3/okhttp
+    implementation 'com.squareup.okhttp3:okhttp:4.12.0'
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.8.1'
+
 }
 
 static def getCurrentDatestamp() {

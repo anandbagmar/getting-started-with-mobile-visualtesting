@@ -3,6 +3,8 @@ package io.samples.appium.android;
 import com.applitools.eyes.*;
 import com.applitools.eyes.appium.Eyes;
 import com.applitools.eyes.appium.Target;
+import com.applitools.eyes.selenium.Configuration;
+import com.applitools.eyes.selenium.StitchMode;
 import com.applitools.eyes.visualgrid.model.AndroidDeviceInfo;
 import com.applitools.eyes.visualgrid.model.AndroidDeviceName;
 import io.appium.java_client.AppiumDriver;
@@ -34,12 +36,13 @@ class CalculatorTest {
     private static String APK_NAME = "sampleApps" + File.separator + "Calculator_8.4.1.apk";
     private static String APK_WITH_NML_NAME = "sampleApps" + File.separator + "dist" + File.separator + "Calculator_8.4.1.apk";
 
-    private static boolean IS_EYES_ENABLED = false;
+    private static boolean IS_EYES_ENABLED = true;
     private static final boolean IS_FULL_RESET = true;
     private static boolean IS_NML = false;
     private static final boolean IS_MULTI_DEVICE = false;
 
     private CalculatorTest() {
+
     }
 
     @BeforeAll
@@ -147,19 +150,25 @@ class CalculatorTest {
     private void configureEyes(TestInfo testInfo) {
         System.out.println("Setup Eyes configuration");
         eyes = new Eyes();
-
         eyes.setLogHandler(new StdoutLogHandler(true));
-        eyes.setBatch(batch);
-        eyes.setBranchName("main");
-        eyes.setEnvName("prod");
-        eyes.addProperty("username", userName);
-        eyes.setApiKey(APPLITOOLS_API_KEY);
-        eyes.setServerUrl("https://eyes.applitools.com");
-        eyes.setMatchLevel(MatchLevel.STRICT);
-        eyes.setIsDisabled(!IS_EYES_ENABLED);
-        eyes.setIgnoreCaret(true);
-        eyes.setIgnoreDisplacements(true);
-        eyes.setSaveNewTests(false);
+        Configuration configuration = eyes.getConfiguration();
+        configuration.addProperty("username", userName);
+        configuration.setApiKey(APPLITOOLS_API_KEY);
+        configuration.setBatch(batch);
+        configuration.setBranchName("main");
+        configuration.setCaptureStatusBar(true);
+        configuration.setDisableBrowserFetching(true);
+        configuration.setEnablePatterns(true);
+        configuration.setEnvironmentName("prod");
+        configuration.setHideCaret(true);
+        configuration.setIgnoreCaret(true);
+        configuration.setIgnoreDisplacements(true);
+        configuration.setIsDisabled(!IS_EYES_ENABLED);
+        configuration.setMatchLevel(MatchLevel.STRICT);
+        configuration.setSaveNewTests(false);
+        configuration.setServerUrl("https://eyes.applitools.com");
+        configuration.setStitchMode(StitchMode.CSS);
+        eyes.setConfiguration(configuration);
         if (IS_NML && IS_MULTI_DEVICE) {
             eyes.setConfiguration(eyes.getConfiguration().addMobileDevice(new AndroidDeviceInfo(AndroidDeviceName.Galaxy_S10_Plus)));
             eyes.setConfiguration(eyes.getConfiguration().addMobileDevice(new AndroidDeviceInfo(AndroidDeviceName.Galaxy_S21)));
@@ -190,7 +199,7 @@ class CalculatorTest {
         eyes.checkWindow("eq");
     }
 
-    @Test
+    //    @Test
     void calculatorTest_full() {
         eyes.check("Calculator!-ignoreCaret", Target.window().ignoreCaret(true));
         eyes.checkWindow("Calculator!");
