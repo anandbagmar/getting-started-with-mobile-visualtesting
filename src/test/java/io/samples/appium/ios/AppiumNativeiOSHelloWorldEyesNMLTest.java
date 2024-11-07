@@ -41,20 +41,20 @@ class AppiumNativeiOSHelloWorldEyesNMLTest {
     private static final String IPHONE_6S_IOS_DEVICE_NAME = "iPhone";
     private static final String IPHONE_6S_IOS_PLATFORM_VERSION = "17.0";
     private static final String IPHONE_6S_IOS_UDID = "auto";
-    private static final String IPHONE_15_PRO_MAX_IOS_DEVICE_NAME = "iPhone 15 Pro Max";
-    private static final String IPHONE_15_PRO_MAX_IOS_PLATFORM_VERSION = "17.5";
-    private static final String IPHONE_15_PRO_MAX_IOS_UDID = "BA898BDF-2EEF-436D-AFA9-799855B2F9BE";
-    private static final String IOS_UDID = IPHONE_15_PRO_MAX_IOS_UDID;
-    private static final String IOS_DEVICE_NAME = IPHONE_15_PRO_MAX_IOS_DEVICE_NAME;
-    private static final String IOS_PLATFORM_VERSION = IPHONE_15_PRO_MAX_IOS_PLATFORM_VERSION;
+    private static final String IPHONE_16_PRO_IOS_DEVICE_NAME = "iPhone 15 Pro Max";
+    private static final String IPHONE_16_PRO_IOS_PLATFORM_VERSION = "17.5";
+    private static final String IPHONE_16_PRO_IOS_UDID = "02D3F6C9-7F16-4139-ABD8-F227BE5AB47A";
+    private static final String IOS_UDID = IPHONE_16_PRO_IOS_UDID;
+    private static final String IOS_DEVICE_NAME = IPHONE_16_PRO_IOS_DEVICE_NAME;
+    private static final String IOS_PLATFORM_VERSION = IPHONE_16_PRO_IOS_PLATFORM_VERSION;
 
     private static String APP_NAME = "sampleApps" + File.separator + "HelloWorldiOS.app";
     private static String APP_WITH_NML_NAME = "sampleApps" + File.separator + "dist" + File.separator + "HelloWorldiOS-instrumented.zip";
 
     private static boolean IS_EYES_ENABLED = true;
-    private static boolean IS_NML = false;
+    private static boolean IS_NML = true;
     private static final boolean IS_MULTI_DEVICE = true;
-    private static final boolean IS_FULL_RESET = true;
+    private static final boolean IS_FULL_RESET = false;
 
     AppiumNativeiOSHelloWorldEyesNMLTest() {
     }
