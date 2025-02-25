@@ -3,10 +3,9 @@ package io.samples.appium.android;
 import com.applitools.eyes.*;
 import com.applitools.eyes.appium.Eyes;
 import com.applitools.eyes.appium.Target;
+import com.applitools.eyes.config.MobileOptions;
 import com.applitools.eyes.selenium.Configuration;
 import com.applitools.eyes.selenium.StitchMode;
-import com.applitools.eyes.visualgrid.model.AndroidDeviceInfo;
-import com.applitools.eyes.visualgrid.model.AndroidDeviceName;
 import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.android.options.UiAutomator2Options;
@@ -170,8 +169,8 @@ class CalculatorTest {
         configuration.setStitchMode(StitchMode.CSS);
         eyes.setConfiguration(configuration);
         if (IS_NML && IS_MULTI_DEVICE) {
-            eyes.setConfiguration(eyes.getConfiguration().addMobileDevice(new AndroidDeviceInfo(AndroidDeviceName.Galaxy_S10_Plus)));
-            eyes.setConfiguration(eyes.getConfiguration().addMobileDevice(new AndroidDeviceInfo(AndroidDeviceName.Galaxy_S21)));
+//            eyes.setConfiguration(eyes.getConfiguration().addMobileDevice(new AndroidDeviceInfo(AndroidDeviceName.Galaxy_S10_Plus)));
+//            eyes.setConfiguration(eyes.getConfiguration().addMobileDevice(new AndroidDeviceInfo(AndroidDeviceName.Galaxy_S21)));
         }
         eyes.open(driver, className, testInfo.getTestMethod().get().getName());
     }

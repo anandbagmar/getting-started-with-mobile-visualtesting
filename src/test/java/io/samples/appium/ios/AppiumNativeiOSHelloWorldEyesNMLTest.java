@@ -42,7 +42,7 @@ class AppiumNativeiOSHelloWorldEyesNMLTest {
     private static final String IPHONE_6S_IOS_PLATFORM_VERSION = "17.0";
     private static final String IPHONE_6S_IOS_UDID = "auto";
     private static final String IPHONE_16_PRO_IOS_DEVICE_NAME = "iPhone 15 Pro Max";
-    private static final String IPHONE_16_PRO_IOS_PLATFORM_VERSION = "17.5";
+    private static final String IPHONE_16_PRO_IOS_PLATFORM_VERSION = "18.0";
     private static final String IPHONE_16_PRO_IOS_UDID = "02D3F6C9-7F16-4139-ABD8-F227BE5AB47A";
     private static final String IOS_UDID = IPHONE_16_PRO_IOS_UDID;
     private static final String IOS_DEVICE_NAME = IPHONE_16_PRO_IOS_DEVICE_NAME;

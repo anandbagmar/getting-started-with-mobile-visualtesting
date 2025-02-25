@@ -3,8 +3,6 @@ package io.samples.appium.android;
 import com.applitools.eyes.*;
 import com.applitools.eyes.appium.Eyes;
 import com.applitools.eyes.appium.Target;
-import com.applitools.eyes.visualgrid.model.AndroidDeviceInfo;
-import com.applitools.eyes.visualgrid.model.AndroidDeviceName;
 import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.android.options.UiAutomator2Options;

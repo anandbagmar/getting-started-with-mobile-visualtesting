@@ -3,8 +3,8 @@ package io.samples.appium.android;
 import com.applitools.eyes.*;
 import com.applitools.eyes.appium.Eyes;
 import com.applitools.eyes.appium.Target;
-import com.applitools.eyes.visualgrid.model.AndroidDeviceInfo;
-import com.applitools.eyes.visualgrid.model.AndroidDeviceName;
+//import com.applitools.eyes.visualgrid.model.AndroidDeviceInfo;
+//import com.applitools.eyes.visualgrid.model.AndroidDeviceName;
 import io.appium.java_client.AppiumBy;
 import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.android.AndroidDriver;
@@ -166,8 +166,8 @@ class DuckDuckGoTest {
         eyes.setForceFullPageScreenshot(true);
         eyes.setSaveNewTests(false);
         if (IS_NML && IS_MULTI_DEVICE) {
-            eyes.setConfiguration(eyes.getConfiguration().addMobileDevice(new AndroidDeviceInfo(AndroidDeviceName.Galaxy_S10_Plus)));
-            eyes.setConfiguration(eyes.getConfiguration().addMobileDevice(new AndroidDeviceInfo(AndroidDeviceName.Galaxy_S21)));
+//            eyes.setConfiguration(eyes.getConfiguration().addMobileDevice(new AndroidDeviceInfo(AndroidDeviceName.Galaxy_S10_Plus)));
+//            eyes.setConfiguration(eyes.getConfiguration().addMobileDevice(new AndroidDeviceInfo(AndroidDeviceName.Galaxy_S21)));
         }
         eyes.open(driver, className, testInfo.getTestMethod().get().getName());
     }

@@ -5,8 +5,14 @@ pipeline {
         // Stage 1: Checkout the Git repository
         stage('Checkout') {
             steps {
-                git branch: 'main', url: 'https://github.com/anandbagmar/getting-started-with-mobile-visualtesting.git',
-                depth: 1 // Perform a shallow clone with only the latest commit
+                checkout([
+                    $class: 'GitSCM',
+                    branches: [[name: 'main']], // Specify the branch
+                    extensions: [
+                        [$class: 'CloneOption', depth: 1, shallow: true] // Shallow clone
+                    ],
+                    userRemoteConfigs: [[url: 'https://github.com/anandbagmar/getting-started-with-mobile-visualtesting.git']]
+                ])
             }
         }
 

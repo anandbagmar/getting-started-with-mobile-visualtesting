@@ -2,7 +2,7 @@ package io.samples.appium.android;
 
 import com.applitools.eyes.*;
 import com.applitools.eyes.appium.Eyes;
-import com.applitools.eyes.visualgrid.model.*;
+//import com.applitools.eyes.visualgrid.model.*;
 import io.appium.java_client.AppiumBy;
 import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.android.AndroidDriver;
@@ -160,8 +160,8 @@ class VodqaTest {
         eyes.setIgnoreDisplacements(true);
         eyes.setSaveNewTests(false);
         if (IS_NML && IS_MULTI_DEVICE) {
-            eyes.setConfiguration(eyes.getConfiguration().addMobileDevice(new AndroidDeviceInfo(AndroidDeviceName.Pixel_6)));
-            eyes.setConfiguration(eyes.getConfiguration().addMobileDevice(new AndroidDeviceInfo(AndroidDeviceName.Pixel_4_XL)));
+//            eyes.setConfiguration(eyes.getConfiguration().addMobileDevice(new AndroidDeviceInfo(AndroidDeviceName.Pixel_6)));
+//            eyes.setConfiguration(eyes.getConfiguration().addMobileDevice(new AndroidDeviceInfo(AndroidDeviceName.Pixel_4_XL)));
         }
         eyes.open(driver, className, testInfo.getTestMethod().get().getName());
     }
