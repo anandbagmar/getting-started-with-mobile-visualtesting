@@ -9,11 +9,13 @@ import io.appium.java_client.android.options.UiAutomator2Options;
 import io.appium.java_client.service.local.AppiumDriverLocalService;
 import io.appium.java_client.service.local.AppiumServiceBuilder;
 import io.appium.java_client.service.local.flags.GeneralServerFlag;
-import org.junit.jupiter.api.*;
 import org.openqa.selenium.By;
 import org.openqa.selenium.remote.DesiredCapabilities;
+import org.testng.Assert;
+import org.testng.annotations.*;
 
 import java.io.File;
+import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.Duration;
@@ -26,18 +28,18 @@ class WebAndroidHelloWorldEyesTest {
     private static final long epochSecond = new Date().toInstant().getEpochSecond();
     private static final String userName = System.getProperty("user.name");
     private static BatchInfo batch;
-    private final String APPLITOOLS_API_KEY = System.getenv("APPLITOOLS_API_KEY");
-    private AppiumDriver driver;
-    private Eyes eyes;
     private static String APPIUM_SERVER_URL = "http://localhost:4723/wd/hub/";
     private static AppiumDriverLocalService localAppiumServer;
     private static boolean IS_EYES_ENABLED = true;
     private static String BROWSER_NAME = "chrome";
+    private final String APPLITOOLS_API_KEY = System.getenv("APPLITOOLS_API_KEY");
+    private AppiumDriver driver;
+    private Eyes eyes;
 
     private WebAndroidHelloWorldEyesTest() {
     }
 
-    @BeforeAll
+    @BeforeSuite
     static void beforeAll() {
         startAppiumServer();
         String batchName = className + "-" + new File(BROWSER_NAME).getName();
@@ -50,7 +52,7 @@ class WebAndroidHelloWorldEyesTest {
         System.out.printf("Batch BatchId: %s%n", batch.getId());
     }
 
-    @AfterAll
+    @AfterSuite
     static void afterAll() {
         System.out.printf("AfterAll: Stopping the local Appium server running on: '%s'%n", APPIUM_SERVER_URL);
         if (null != batch) {
@@ -60,29 +62,6 @@ class WebAndroidHelloWorldEyesTest {
             localAppiumServer.stop();
             System.out.printf("Is Appium server running? %s%n", localAppiumServer.isRunning());
         }
-    }
-
-    @BeforeEach
-    public void beforeEach(TestInfo testInfo) {
-        System.out.printf("Test: %s - BeforeEach%n", testInfo.getTestMethod().get().getName());
-        setUpAndroid(testInfo);
-    }
-
-    @AfterEach
-    void tearDown(TestInfo testInfo) {
-        System.out.println("AfterEach: Test - " + testInfo.getTestMethod().get().getName());
-        boolean isPass = true;
-        if (IS_EYES_ENABLED) {
-            TestResults testResults = eyes.close(false);
-            System.out.printf("Test: %s\n%s%n", testResults.getName(), testResults);
-            if (testResults.getStatus().equals(TestResultsStatus.Failed) || testResults.getStatus().equals(TestResultsStatus.Unresolved)) {
-                isPass = false;
-            }
-        }
-        if (null != driver) {
-            driver.quit();
-        }
-        Assertions.assertTrue(isPass, "Visual differences found.");
     }
 
     private static void startAppiumServer() {
@@ -103,8 +82,31 @@ class WebAndroidHelloWorldEyesTest {
         System.out.printf("Appium server started on url: '%s'%n", localAppiumServer.getUrl().toString());
     }
 
-    void setUpAndroid(TestInfo testInfo) {
-        System.out.println("BeforeEach: Test - " + testInfo.getTestMethod().get().getName());
+    @BeforeMethod
+    public void beforeEach(Method testInfo) {
+        System.out.printf("Test: %s - BeforeEach%n", testInfo.getName());
+        setUpAndroid(testInfo);
+    }
+
+    @AfterMethod
+    void tearDown(Method testInfo) {
+        System.out.println("AfterEach: Test - " + testInfo.getName());
+        boolean isPass = true;
+        if (IS_EYES_ENABLED) {
+            TestResults testResults = eyes.close(false);
+            System.out.printf("Test: %s\n%s%n", testResults.getName(), testResults);
+            if (testResults.getStatus().equals(TestResultsStatus.Failed) || testResults.getStatus().equals(TestResultsStatus.Unresolved)) {
+                isPass = false;
+            }
+        }
+        if (null != driver) {
+            driver.quit();
+        }
+        Assert.assertTrue(isPass, "Visual differences found.");
+    }
+
+    void setUpAndroid(Method testInfo) {
+        System.out.println("BeforeEach: Test - " + testInfo.getName());
         System.out.printf("Create AppiumDriver for android test - %s%n", APPIUM_SERVER_URL);
         // Appium 2.x
         DesiredCapabilities uiAutomator2Options = new DesiredCapabilities();
@@ -132,7 +134,7 @@ class WebAndroidHelloWorldEyesTest {
         configureEyes(testInfo);
     }
 
-    private void configureEyes(TestInfo testInfo) {
+    private void configureEyes(Method testInfo) {
         System.out.println("Setup Eyes configuration");
         eyes = new Eyes();
 
@@ -148,7 +150,7 @@ class WebAndroidHelloWorldEyesTest {
         eyes.setIgnoreCaret(true);
         eyes.setIgnoreDisplacements(true);
         eyes.setSaveNewTests(false);
-        eyes.open(driver, className, testInfo.getTestMethod().get().getName());
+        eyes.open(driver, className, testInfo.getName());
     }
 
     @Test
@@ -164,6 +166,6 @@ class WebAndroidHelloWorldEyesTest {
         }
         driver.findElement(By.tagName("button")).click();
         eyes.check("Click Me", Target.window().layout());
-        Assertions.assertTrue(true, "Test completed. Assertions will be done by Applitools");
+        Assert.assertTrue(true, "Test completed. Assertions will be done by Applitools");
     }
 }

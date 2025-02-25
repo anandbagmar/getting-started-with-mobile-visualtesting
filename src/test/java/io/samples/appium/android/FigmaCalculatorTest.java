@@ -1,8 +1,10 @@
 package io.samples.appium.android;
 
-import com.applitools.eyes.*;
+import com.applitools.eyes.BatchInfo;
+import com.applitools.eyes.MatchLevel;
+import com.applitools.eyes.StdoutLogHandler;
+import com.applitools.eyes.TestResults;
 import com.applitools.eyes.appium.Eyes;
-import com.applitools.eyes.appium.Target;
 import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.android.options.UiAutomator2Options;
@@ -10,11 +12,12 @@ import io.appium.java_client.service.local.AppiumDriverLocalService;
 import io.appium.java_client.service.local.AppiumServiceBuilder;
 import io.appium.java_client.service.local.flags.GeneralServerFlag;
 import io.samples.appium.EyesResults;
-import org.junit.jupiter.api.*;
 import org.openqa.selenium.By;
 import org.openqa.selenium.remote.DesiredCapabilities;
+import org.testng.annotations.*;
 
 import java.io.File;
+import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.Duration;
@@ -24,21 +27,20 @@ class FigmaCalculatorTest {
     private static final String className = CalculatorTest.class.getSimpleName();
     private static final long epochSecond = new Date().toInstant().getEpochSecond();
     private static final String userName = System.getProperty("user.name");
+    private static final boolean IS_FULL_RESET = true;
     private static BatchInfo batch;
-    private final String APPLITOOLS_API_KEY = System.getenv("APPLITOOLS_API_KEY");
-    private AppiumDriver driver;
-    private Eyes eyes;
     private static String APPIUM_SERVER_URL = "http://localhost:4723/wd/hub/";
     private static AppiumDriverLocalService localAppiumServer;
     private static String APK_NAME = "sampleApps" + File.separator + "Calculator_8.4.1.apk";
-
     private static boolean IS_EYES_ENABLED = true;
-    private static final boolean IS_FULL_RESET = true;
+    private final String APPLITOOLS_API_KEY = System.getenv("APPLITOOLS_API_KEY");
+    private AppiumDriver driver;
+    private Eyes eyes;
 
     private FigmaCalculatorTest() {
     }
 
-    @BeforeAll
+    @BeforeSuite
     static void beforeAll() {
         startAppiumServer();
         String batchName = className + "-" + new File(APK_NAME).getName();
@@ -51,7 +53,7 @@ class FigmaCalculatorTest {
         System.out.printf("Batch BatchId: %s%n", batch.getId());
     }
 
-    @AfterAll
+    @AfterSuite
     static void afterAll() {
         System.out.printf("AfterAll: Stopping the local Appium server running on: '%s'%n", APPIUM_SERVER_URL);
         if (null != batch) {
@@ -60,27 +62,6 @@ class FigmaCalculatorTest {
         if (null != localAppiumServer) {
             localAppiumServer.stop();
             System.out.printf("Is Appium server running? %s%n", localAppiumServer.isRunning());
-        }
-    }
-
-    @BeforeEach
-    public void beforeEach(TestInfo testInfo) {
-        System.out.printf("Test: %s - BeforeEach%n", testInfo.getTestMethod().get().getName());
-        setUpAndroid(testInfo);
-    }
-
-    @AfterEach
-    void tearDown(TestInfo testInfo) {
-        System.out.println("AfterEach: Test - " + testInfo.getTestMethod().get().getName());
-        if (null != driver) {
-            driver.quit();
-        }
-    }
-
-    private void getResults() {
-        if (IS_EYES_ENABLED) {
-            TestResults testResults = eyes.close(false);
-            EyesResults.displayVisualValidationResults(testResults);
         }
     }
 
@@ -102,8 +83,29 @@ class FigmaCalculatorTest {
         System.out.printf("Appium server started on url: '%s'%n", localAppiumServer.getUrl().toString());
     }
 
-    void setUpAndroid(TestInfo testInfo) {
-        System.out.println("BeforeEach: Test - " + testInfo.getTestMethod().get().getName());
+    @BeforeMethod
+    public void beforeEach(Method testInfo) {
+        System.out.printf("Test: %s - BeforeEach%n", testInfo.getName());
+        setUpAndroid(testInfo);
+    }
+
+    @AfterMethod
+    void tearDown(Method testInfo) {
+        System.out.println("AfterEach: Test - " + testInfo.getName());
+        if (null != driver) {
+            driver.quit();
+        }
+    }
+
+    private void getResults() {
+        if (IS_EYES_ENABLED) {
+            TestResults testResults = eyes.close(false);
+            EyesResults.displayVisualValidationResults(testResults);
+        }
+    }
+
+    void setUpAndroid(Method testInfo) {
+        System.out.println("BeforeEach: Test - " + testInfo.getName());
         System.out.printf("Create AppiumDriver for android test - %s%n", APPIUM_SERVER_URL);
         // Appium 2.x
         DesiredCapabilities uiAutomator2Options = new DesiredCapabilities();
@@ -132,7 +134,7 @@ class FigmaCalculatorTest {
         configureEyes(testInfo);
     }
 
-    private void configureEyes(TestInfo testInfo) {
+    private void configureEyes(Method testInfo) {
         System.out.println("Setup Eyes configuration");
         eyes = new Eyes();
 

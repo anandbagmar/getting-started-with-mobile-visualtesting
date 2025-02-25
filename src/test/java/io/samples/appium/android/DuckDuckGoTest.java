@@ -2,9 +2,6 @@ package io.samples.appium.android;
 
 import com.applitools.eyes.*;
 import com.applitools.eyes.appium.Eyes;
-import com.applitools.eyes.appium.Target;
-//import com.applitools.eyes.visualgrid.model.AndroidDeviceInfo;
-//import com.applitools.eyes.visualgrid.model.AndroidDeviceName;
 import io.appium.java_client.AppiumBy;
 import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.android.AndroidDriver;
@@ -13,39 +10,40 @@ import io.appium.java_client.service.local.AppiumDriverLocalService;
 import io.appium.java_client.service.local.AppiumServiceBuilder;
 import io.appium.java_client.service.local.flags.GeneralServerFlag;
 import io.samples.Wait;
-import org.junit.jupiter.api.*;
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.DesiredCapabilities;
+import org.testng.Assert;
+import org.testng.annotations.*;
 
 import java.io.File;
+import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.Duration;
 import java.util.Date;
 
+
 class DuckDuckGoTest {
     private static final String className = DuckDuckGoTest.class.getSimpleName();
     private static final long epochSecond = new Date().toInstant().getEpochSecond();
     private static final String userName = System.getProperty("user.name");
+    private static final boolean IS_FULL_RESET = true;
+    private static final boolean IS_MULTI_DEVICE = false;
     private static BatchInfo batch;
-    private final String APPLITOOLS_API_KEY = System.getenv("APPLITOOLS_API_KEY");
-    private AppiumDriver driver;
-    private Eyes eyes;
     private static String APPIUM_SERVER_URL = "http://localhost:4723/wd/hub/";
     private static AppiumDriverLocalService localAppiumServer;
     private static String APK_NAME = "sampleApps" + File.separator + "duckduckgo-5.202.0.apk";
     private static String APK_WITH_NML_NAME = "sampleApps" + File.separator + "dist" + File.separator + "duckduckgo-5.202.0.apk";
-
     private static boolean IS_EYES_ENABLED = true;
-    private static final boolean IS_FULL_RESET = true;
     private static boolean IS_NML = true;
-    private static final boolean IS_MULTI_DEVICE = false;
+    private final String APPLITOOLS_API_KEY = System.getenv("APPLITOOLS_API_KEY");
+    private AppiumDriver driver;
+    private Eyes eyes;
 
     private DuckDuckGoTest() {
     }
 
-    @BeforeAll
+    @BeforeSuite
     static void beforeAll() {
         startAppiumServer();
         String batchName = className + "-NML=" + IS_NML + "-MULTI_DEVICE=" + IS_MULTI_DEVICE + "-" + new File(APK_NAME).getName();
@@ -58,7 +56,7 @@ class DuckDuckGoTest {
         System.out.printf("Batch BatchId: %s%n", batch.getId());
     }
 
-    @AfterAll
+    @AfterSuite
     static void afterAll() {
         System.out.printf("AfterAll: Stopping the local Appium server running on: '%s'%n", APPIUM_SERVER_URL);
         if (null != batch) {
@@ -68,29 +66,6 @@ class DuckDuckGoTest {
             localAppiumServer.stop();
             System.out.printf("Is Appium server running? %s%n", localAppiumServer.isRunning());
         }
-    }
-
-    @BeforeEach
-    public void beforeEach(TestInfo testInfo) {
-        System.out.printf("Test: %s - BeforeEach%n", testInfo.getTestMethod().get().getName());
-        setUpAndroid(testInfo);
-    }
-
-    @AfterEach
-    void tearDown(TestInfo testInfo) {
-        System.out.println("AfterEach: Test - " + testInfo.getTestMethod().get().getName());
-        boolean isPass = true;
-        if (IS_EYES_ENABLED) {
-            TestResults testResults = eyes.close(false);
-            System.out.printf("Test: %s\n%s%n", testResults.getName(), testResults);
-            if (testResults.getStatus().equals(TestResultsStatus.Failed) || testResults.getStatus().equals(TestResultsStatus.Unresolved)) {
-                isPass = false;
-            }
-        }
-        if (null != driver) {
-            driver.quit();
-        }
-        Assertions.assertTrue(isPass, "Visual differences found.");
     }
 
     private static void startAppiumServer() {
@@ -111,8 +86,31 @@ class DuckDuckGoTest {
         System.out.printf("Appium server started on url: '%s'%n", localAppiumServer.getUrl().toString());
     }
 
-    void setUpAndroid(TestInfo testInfo) {
-        System.out.println("BeforeEach: Test - " + testInfo.getTestMethod().get().getName());
+    @BeforeMethod
+    public void beforeEach(Method testInfo) {
+        System.out.printf("Test: %s - BeforeEach%n", testInfo.getName());
+        setUpAndroid(testInfo);
+    }
+
+    @AfterMethod
+    void tearDown(Method testInfo) {
+        System.out.println("AfterEach: Test - " + testInfo.getName());
+        boolean isPass = true;
+        if (IS_EYES_ENABLED) {
+            TestResults testResults = eyes.close(false);
+            System.out.printf("Test: %s\n%s%n", testResults.getName(), testResults);
+            if (testResults.getStatus().equals(TestResultsStatus.Failed) || testResults.getStatus().equals(TestResultsStatus.Unresolved)) {
+                isPass = false;
+            }
+        }
+        if (null != driver) {
+            driver.quit();
+        }
+        Assert.assertTrue(isPass, "Visual differences found.");
+    }
+
+    void setUpAndroid(Method testInfo) {
+        System.out.println("BeforeEach: Test - " + testInfo.getName());
         System.out.printf("Create AppiumDriver for android test - %s%n", APPIUM_SERVER_URL);
         // Appium 2.x
         DesiredCapabilities uiAutomator2Options = new DesiredCapabilities();
@@ -147,7 +145,7 @@ class DuckDuckGoTest {
         configureEyes(testInfo);
     }
 
-    private void configureEyes(TestInfo testInfo) {
+    private void configureEyes(Method testInfo) {
         System.out.println("Setup Eyes configuration");
         eyes = new Eyes();
 
@@ -166,10 +164,10 @@ class DuckDuckGoTest {
         eyes.setForceFullPageScreenshot(true);
         eyes.setSaveNewTests(false);
         if (IS_NML && IS_MULTI_DEVICE) {
-//            eyes.setConfiguration(eyes.getConfiguration().addMobileDevice(new AndroidDeviceInfo(AndroidDeviceName.Galaxy_S10_Plus)));
-//            eyes.setConfiguration(eyes.getConfiguration().addMobileDevice(new AndroidDeviceInfo(AndroidDeviceName.Galaxy_S21)));
+            //            eyes.setConfiguration(eyes.getConfiguration().addMobileDevice(new AndroidDeviceInfo(AndroidDeviceName.Galaxy_S10_Plus)));
+            //            eyes.setConfiguration(eyes.getConfiguration().addMobileDevice(new AndroidDeviceInfo(AndroidDeviceName.Galaxy_S21)));
         }
-        eyes.open(driver, className, testInfo.getTestMethod().get().getName());
+        eyes.open(driver, className, testInfo.getName());
     }
 
     @Test

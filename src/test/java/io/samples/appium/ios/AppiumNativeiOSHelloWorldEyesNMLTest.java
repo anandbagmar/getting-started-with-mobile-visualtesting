@@ -12,12 +12,14 @@ import io.appium.java_client.ios.options.XCUITestOptions;
 import io.appium.java_client.service.local.AppiumDriverLocalService;
 import io.appium.java_client.service.local.AppiumServiceBuilder;
 import io.appium.java_client.service.local.flags.GeneralServerFlag;
-import org.junit.jupiter.api.*;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.DesiredCapabilities;
+import org.testng.Assert;
+import org.testng.annotations.*;
 
 import java.io.File;
+import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.Duration;
@@ -27,17 +29,12 @@ import java.util.Random;
 
 import static io.samples.Wait.waitFor;
 
+;
+
 class AppiumNativeiOSHelloWorldEyesNMLTest {
     private static final String className = AppiumNativeiOSHelloWorldEyesNMLTest.class.getSimpleName();
     private static final long epochSecond = new Date().toInstant().getEpochSecond();
     private static final String userName = System.getProperty("user.name");
-    private static BatchInfo batch;
-    private final String APPLITOOLS_API_KEY = System.getenv("APPLITOOLS_API_KEY");
-    private AppiumDriver driver;
-    private Eyes eyes;
-    private static String APPIUM_SERVER_URL = "http://localhost:4723/wd/hub/";
-    private static AppiumDriverLocalService localAppiumServer;
-
     private static final String IPHONE_6S_IOS_DEVICE_NAME = "iPhone";
     private static final String IPHONE_6S_IOS_PLATFORM_VERSION = "17.0";
     private static final String IPHONE_6S_IOS_UDID = "auto";
@@ -47,19 +44,23 @@ class AppiumNativeiOSHelloWorldEyesNMLTest {
     private static final String IOS_UDID = IPHONE_16_PRO_IOS_UDID;
     private static final String IOS_DEVICE_NAME = IPHONE_16_PRO_IOS_DEVICE_NAME;
     private static final String IOS_PLATFORM_VERSION = IPHONE_16_PRO_IOS_PLATFORM_VERSION;
-
-    private static String APP_NAME = "sampleApps" + File.separator + "HelloWorldiOS.app";
-    private static String APP_WITH_NML_NAME = "sampleApps" + File.separator + "dist" + File.separator + "HelloWorldiOS-instrumented.zip";
-
-    private static boolean IS_EYES_ENABLED = true;
-    private static boolean IS_NML = true;
     private static final boolean IS_MULTI_DEVICE = true;
     private static final boolean IS_FULL_RESET = false;
+    private static BatchInfo batch;
+    private static String APPIUM_SERVER_URL = "http://localhost:4723/wd/hub/";
+    private static AppiumDriverLocalService localAppiumServer;
+    private static String APP_NAME = "sampleApps" + File.separator + "HelloWorldiOS.app";
+    private static String APP_WITH_NML_NAME = "sampleApps" + File.separator + "dist" + File.separator + "HelloWorldiOS-instrumented.zip";
+    private static boolean IS_EYES_ENABLED = true;
+    private static boolean IS_NML = true;
+    private final String APPLITOOLS_API_KEY = System.getenv("APPLITOOLS_API_KEY");
+    private AppiumDriver driver;
+    private Eyes eyes;
 
     AppiumNativeiOSHelloWorldEyesNMLTest() {
     }
 
-    @BeforeAll
+    @BeforeSuite
     static void beforeAll() {
         startAppiumServer();
         String batchName = className + "-NML=" + IS_NML + "-MULTI_DEVICE=" + IS_MULTI_DEVICE + "-" + new File(APP_NAME).getName();
@@ -72,7 +73,7 @@ class AppiumNativeiOSHelloWorldEyesNMLTest {
         System.out.printf("Batch BatchId: %s%n", batch.getId());
     }
 
-    @AfterAll
+    @AfterSuite
     static void afterAll() {
         System.out.printf("AfterAll: Stopping the local Appium server running on: '%s'%n", APPIUM_SERVER_URL);
         if (null != batch) {
@@ -82,29 +83,6 @@ class AppiumNativeiOSHelloWorldEyesNMLTest {
             localAppiumServer.stop();
             System.out.printf("Is Appium server running? %s%n", localAppiumServer.isRunning());
         }
-    }
-
-    @BeforeEach
-    public void beforeEach(TestInfo testInfo) {
-        System.out.printf("Test: %s - BeforeEach%n", testInfo.getTestMethod().get().getName());
-        setUpiOS(testInfo);
-    }
-
-    @AfterEach
-    void tearDown(TestInfo testInfo) {
-        System.out.println("AfterEach: Test - " + testInfo.getTestMethod().get().getName());
-        boolean isPass = true;
-        if (IS_EYES_ENABLED) {
-            TestResults testResults = eyes.close(false);
-            System.out.printf("Test: %s\n%s%n", testResults.getName(), testResults);
-            if (testResults.getStatus().equals(TestResultsStatus.Failed) || testResults.getStatus().equals(TestResultsStatus.Unresolved)) {
-                isPass = false;
-            }
-        }
-        if (null != driver) {
-            driver.quit();
-        }
-        Assertions.assertTrue(isPass, "Visual differences found.");
     }
 
     private static void startAppiumServer() {
@@ -125,8 +103,56 @@ class AppiumNativeiOSHelloWorldEyesNMLTest {
         System.out.printf("Appium server started on url: '%s'%n", localAppiumServer.getUrl().toString());
     }
 
-    void setUpiOS(TestInfo testInfo) {
-        System.out.println("BeforeEach: Test - " + testInfo.getTestMethod().get().getName());
+    private static void generateRandomNumber(AppiumDriver driver) {
+        int numberOfClicks = new Random().nextInt(100) % 10;
+        System.out.printf("Click on get random number %d times%n", numberOfClicks);
+        for (int i = 0; i < numberOfClicks; i++) {
+            driver.findElement(AppiumBy.accessibilityId("MakeRandomNumberCheckbox")).click();
+            waitFor(1);
+        }
+    }
+
+    private static WebElement getRandomNumberElement(AppiumDriver driver, Eyes eyes) {
+        List<WebElement> webElementList = driver.findElements(AppiumBy.xpath("//XCUIElementTypeStaticText[@name]"));
+        for (WebElement element : webElementList) {
+            String text = element.getText();
+            System.out.println(text);
+            try {
+                long randomNumber = Long.parseLong(text);
+                System.out.println("Random number: " + randomNumber);
+                return element;
+            } catch (NumberFormatException e) {
+                System.out.println("Not the element we are looking for");
+            }
+        }
+        throw new RuntimeException("Random number not available");
+    }
+
+    @BeforeMethod
+    public void beforeEach(Method testInfo) {
+        System.out.printf("Test: %s - BeforeEach%n", testInfo.getName());
+        setUpiOS(testInfo);
+    }
+
+    @AfterMethod
+    void tearDown(Method testInfo) {
+        System.out.println("AfterEach: Test - " + testInfo.getName());
+        boolean isPass = true;
+        if (IS_EYES_ENABLED) {
+            TestResults testResults = eyes.close(false);
+            System.out.printf("Test: %s\n%s%n", testResults.getName(), testResults);
+            if (testResults.getStatus().equals(TestResultsStatus.Failed) || testResults.getStatus().equals(TestResultsStatus.Unresolved)) {
+                isPass = false;
+            }
+        }
+        if (null != driver) {
+            driver.quit();
+        }
+        Assert.assertTrue(isPass, "Visual differences found.");
+    }
+
+    void setUpiOS(Method testInfo) {
+        System.out.println("BeforeEach: Test - " + testInfo.getName());
         System.out.printf("Create AppiumDriver for iOS test - %s%n", APPIUM_SERVER_URL);
 
         // Appium 2.x
@@ -162,7 +188,7 @@ class AppiumNativeiOSHelloWorldEyesNMLTest {
         configureEyes(testInfo);
     }
 
-    private void configureEyes(TestInfo testInfo) {
+    private void configureEyes(Method testInfo) {
         System.out.println("Setup Eyes configuration");
         eyes = new Eyes();
 
@@ -190,7 +216,7 @@ class AppiumNativeiOSHelloWorldEyesNMLTest {
 
             eyes.setConfiguration(config);
         }
-        eyes.open(driver, className, testInfo.getTestMethod().get().getName());
+        eyes.open(driver, className, testInfo.getName());
     }
 
     @Test
@@ -216,32 +242,7 @@ class AppiumNativeiOSHelloWorldEyesNMLTest {
         driver.findElement(By.xpath("//XCUIElementTypeStaticText[@name=\"Click me!\"]")).click();
         waitFor(1);
         eyes.checkWindow("Click me!");
-        Assertions.assertTrue(true, "Test completed. Assertions will be done by Applitools");
-    }
-
-    private static void generateRandomNumber(AppiumDriver driver) {
-        int numberOfClicks = new Random().nextInt(100) % 10;
-        System.out.printf("Click on get random number %d times%n", numberOfClicks);
-        for (int i = 0; i < numberOfClicks; i++) {
-            driver.findElement(AppiumBy.accessibilityId("MakeRandomNumberCheckbox")).click();
-            waitFor(1);
-        }
-    }
-
-    private static WebElement getRandomNumberElement(AppiumDriver driver, Eyes eyes) {
-        List<WebElement> webElementList = driver.findElements(AppiumBy.xpath("//XCUIElementTypeStaticText[@name]"));
-        for (WebElement element : webElementList) {
-            String text = element.getText();
-            System.out.println(text);
-            try {
-                long randomNumber = Long.parseLong(text);
-                System.out.println("Random number: " + randomNumber);
-                return element;
-            } catch (NumberFormatException e) {
-                System.out.println("Not the element we are looking for");
-            }
-        }
-        throw new RuntimeException("Random number not available");
+        Assert.assertTrue(true, "Test completed. Assertions will be done by Applitools");
     }
 
 }

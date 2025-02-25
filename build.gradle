@@ -26,7 +26,7 @@ compileJava { options.encoding = "UTF-8" }
 
 dependencies {
     implementation "com.applitools:eyes-appium-java5:5.74.3"
-    implementation "org.junit.jupiter:junit-jupiter:5.12.0"
+    implementation "org.testng:testng:7.10.2"
     implementation 'org.nanohttpd:nanohttpd:2.3.1'
     implementation 'com.googlecode.libphonenumber:libphonenumber:8.13.42'
     implementation 'com.google.code.gson:gson:2.11.0'
@@ -34,6 +34,7 @@ dependencies {
     implementation 'org.jsoup:jsoup:1.18.1'
     implementation 'org.dom4j:dom4j:2.1.4'
     implementation 'com.squareup.okhttp3:okhttp:4.12.0'
+    testImplementation 'org.testng:testng:7.1.0'
 }
 
 static def getCurrentDatestamp() {
@@ -56,7 +57,7 @@ test {
         environment "APPLITOOLS_LOG_DIR", "${project.logDir}/applitools_logs"
         environment "LOG_DIR", "${project.logDir}"
     }
-    useJUnitPlatform() {
+    useTestNG() {
         reports {
             html.required.set(true)
             junitXml.required.set(true)

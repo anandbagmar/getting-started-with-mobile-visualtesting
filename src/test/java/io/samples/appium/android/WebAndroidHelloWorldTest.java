@@ -6,11 +6,13 @@ import io.appium.java_client.android.options.UiAutomator2Options;
 import io.appium.java_client.service.local.AppiumDriverLocalService;
 import io.appium.java_client.service.local.AppiumServiceBuilder;
 import io.appium.java_client.service.local.flags.GeneralServerFlag;
-import org.junit.jupiter.api.*;
 import org.openqa.selenium.By;
 import org.openqa.selenium.remote.DesiredCapabilities;
+import org.testng.Assert;
+import org.testng.annotations.*;
 
 import java.io.File;
+import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.Duration;
@@ -18,40 +20,26 @@ import java.time.Duration;
 import static io.samples.Wait.waitFor;
 
 class WebAndroidHelloWorldTest {
-    private AppiumDriver driver;
     private static String APPIUM_SERVER_URL = "http://localhost:4723/wd/hub/";
     private static AppiumDriverLocalService localAppiumServer;
     private static String BROWSER_NAME = "chrome";
+    private AppiumDriver driver;
 
     private WebAndroidHelloWorldTest() {
     }
 
-    @BeforeAll
+    @BeforeSuite
     static void beforeAll() {
         startAppiumServer();
         System.out.println("Create AppiumRunner");
     }
 
-    @AfterAll
+    @AfterSuite
     static void afterAll() {
         System.out.printf("AfterAll: Stopping the local Appium server running on: '%s'%n", APPIUM_SERVER_URL);
         if (null != localAppiumServer) {
             localAppiumServer.stop();
             System.out.printf("Is Appium server running? %s%n", localAppiumServer.isRunning());
-        }
-    }
-
-    @BeforeEach
-    public void beforeEach(TestInfo testInfo) {
-        System.out.printf("Test: %s - BeforeEach%n", testInfo.getTestMethod().get().getName());
-        setUpAndroid(testInfo);
-    }
-
-    @AfterEach
-    void tearDown(TestInfo testInfo) {
-        System.out.println("AfterEach: Test - " + testInfo.getTestMethod().get().getName());
-        if (null != driver) {
-            driver.quit();
         }
     }
 
@@ -73,8 +61,22 @@ class WebAndroidHelloWorldTest {
         System.out.printf("Appium server started on url: '%s'%n", localAppiumServer.getUrl().toString());
     }
 
-    void setUpAndroid(TestInfo testInfo) {
-        System.out.println("BeforeEach: Test - " + testInfo.getTestMethod().get().getName());
+    @BeforeMethod
+    public void beforeEach(Method testInfo) {
+        System.out.printf("Test: %s - BeforeEach%n", testInfo.getName());
+        setUpAndroid(testInfo);
+    }
+
+    @AfterMethod
+    void tearDown(Method testInfo) {
+        System.out.println("AfterEach: Test - " + testInfo.getName());
+        if (null != driver) {
+            driver.quit();
+        }
+    }
+
+    void setUpAndroid(Method testInfo) {
+        System.out.println("BeforeEach: Test - " + testInfo.getName());
         System.out.printf("Create AppiumDriver for android test - %s%n", APPIUM_SERVER_URL);
         // Appium 2.x
         DesiredCapabilities uiAutomator2Options = new DesiredCapabilities();
@@ -109,6 +111,6 @@ class WebAndroidHelloWorldTest {
             waitFor(1);
         }
         driver.findElement(By.tagName("button")).click();
-        Assertions.assertTrue(true, "Test completed. Assertions will be done by Applitools");
+        Assert.assertTrue(true, "Test completed. Assertions will be done by Applitools");
     }
 }
