@@ -49,8 +49,15 @@ class CalculatorTest {
     static void beforeAll() {
         startAppiumServer();
         String batchName = className + "-NML=" + IS_NML + "-MULTI_DEVICE=" + IS_MULTI_DEVICE + "-" + new File(APK_NAME).getName();
-        batch = new BatchInfo(batchName);
-        batch.setId(String.valueOf(epochSecond));
+        String applitoolsBatchName = System.getenv("APPLITOOLS_BATCH_NAME") == null ? batchName : System.getenv("APPLITOOLS_BATCH_NAME");
+        batch = new BatchInfo(applitoolsBatchName);
+        // If the test runs via Jenkins, set the batch ID accordingly.
+        String batchId = System.getenv("APPLITOOLS_BATCH_ID");
+        if (batchId != null) {
+            batch.setId(batchId);
+        } else {
+            batch.setId(String.valueOf(epochSecond));
+        }
         batch.addProperty("REPOSITORY_NAME", new File(System.getProperty("user.dir")).getName());
         System.out.println("Create AppiumRunner");
         System.out.printf("Batch name: %s%n", batch.getName());
