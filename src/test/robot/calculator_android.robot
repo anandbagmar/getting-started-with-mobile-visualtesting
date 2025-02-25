@@ -1,6 +1,8 @@
 *** Settings ***
 | Library | AppiumLibrary | run_on_failure=AppiumLibrary.CapturePageScreenshot
-
+Library     Process
+Library     Collections
+Library     OperatingSystem
 Library     EyesLibrary       runner=mobile_native    config=applitools.yaml
 Resource    Resource/init.robot
 
@@ -16,6 +18,8 @@ ${DIGIT_4_BTN} =    //android.widget.ImageButton[@content-desc="4"]
 ${ADD_BTN} =        //android.widget.ImageButton[@content-desc="plus"]
 ${SUBTRACT_BTN} =   //android.widget.ImageButton[@content-desc="minus"]
 ${EQ_BTN} =         //android.widget.ImageButton[@content-desc="equals"]
+${APPIUM_HOST}    127.0.0.1
+${APPIUM_PORT}    4723
 
 *** Keywords ***
 # For setup, load the demo site's login page and open Eyes to start visual testing.
