@@ -1,0 +1,37 @@
+pipeline {
+    agent any
+
+    stages {
+        // Stage 1: Checkout the Git repository
+        stage('Checkout') {
+            steps {
+                git branch: 'main', url: 'https://github.com/anandbagmar/getting-started-with-mobile-visualtesting.git',
+                depth: 1 // Perform a shallow clone with only the latest commit
+            }
+        }
+
+        // Stage 2: Setup appium
+        stage('Setup') {
+            steps {
+                sh 'npm install'
+            }
+        }
+
+        // Stage 3: Run Gradle tests
+        stage('Run Tests') {
+            steps {
+                sh './gradlew clean test --tests CalculatorTest'
+            }
+        }
+    }
+
+    // Optional: Post-build actions
+    post {
+        success {
+            echo 'Tests completed successfully!'
+        }
+        failure {
+            echo 'Tests failed!'
+        }
+    }
+}
