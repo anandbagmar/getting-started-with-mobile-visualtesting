@@ -35,7 +35,7 @@ class VodqaTest {
     private static String APK_NAME = "sampleApps" + File.separator + "VodQA.apk";
     private static String APK_WITH_NML_NAME = "sampleApps" + File.separator + "dist" + File.separator + "VodQA.apk";
     private static boolean IS_EYES_ENABLED = true;
-    private static boolean IS_NML = true;
+    private static boolean IS_NML = false;
     private final String APPLITOOLS_API_KEY = System.getenv("APPLITOOLS_API_KEY");
     private AppiumDriver driver;
     private Eyes eyes;
