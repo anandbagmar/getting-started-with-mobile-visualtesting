@@ -1,6 +1,6 @@
 # Jenkins Setup
 
-## Step 1 - [Set up the Jenkins server](README_Jenkins_Server_DockerRun.md)
+## Step 1 - [Set up the Jenkins server](README_Jenkins_Setup.md)
 
 ## Step 2 - [Set up & Configure Applitools Plugin](README_Jenkins_Applitools.md)
 
