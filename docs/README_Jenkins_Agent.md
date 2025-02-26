@@ -42,7 +42,7 @@ Note: PowerShell users must use curl.exe instead of curl because curl is a defau
 
 ### Step 4 - Stop the agent
 
-Run this command from command line:
+Run this command from command line: (Unix)
 
 ```shell
   ps -ef | grep agent.jar | awk '{print $2}' | xargs kill 
