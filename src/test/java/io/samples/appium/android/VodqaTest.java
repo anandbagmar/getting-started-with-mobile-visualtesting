@@ -9,6 +9,7 @@ import io.appium.java_client.android.options.UiAutomator2Options;
 import io.appium.java_client.service.local.AppiumDriverLocalService;
 import io.appium.java_client.service.local.AppiumServiceBuilder;
 import io.appium.java_client.service.local.flags.GeneralServerFlag;
+import io.samples.Wait;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.testng.Assert;
@@ -177,20 +178,24 @@ class VodqaTest {
 
         loginElement.click();
         WebElement photoViewElement = waitTillElementIsPresent(driver, AppiumBy.xpath("//android.widget.TextView[@content-desc=\"photoView\"]"));
+        Wait.waitFor(2);
         eyes.checkWindow("Logged in");
 
         photoViewElement.click();
         WebElement backElement = waitTillElementIsPresent(driver, AppiumBy.xpath("//android.widget.TextView[@text=\"Back\"]"));
+        Wait.waitFor(2);
         eyes.checkWindow("Photo View");
 
         backElement.click();
         WebElement chainedViewElement = waitTillElementIsPresent(driver, AppiumBy.xpath("//android.widget.TextView[@content-desc=\"chainedView\"]"));
         chainedViewElement.click();
         backElement = waitTillElementIsPresent(driver, AppiumBy.xpath("//android.widget.TextView[@text=\"Back\"]"));
+        Wait.waitFor(2);
         eyes.checkWindow("Chained View");
 
         backElement.click();
         waitTillElementIsPresent(driver, AppiumBy.xpath("//android.widget.TextView[@content-desc=\"chainedView\"]"));
+        Wait.waitFor(2);
         eyes.checkWindow("Back to main screen");
     }
 }
