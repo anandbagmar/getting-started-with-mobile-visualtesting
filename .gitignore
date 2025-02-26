@@ -32,3 +32,5 @@ node_modules/
 sampleApps/
 pocs/
 dist/
+
+docs/jenkins-docker

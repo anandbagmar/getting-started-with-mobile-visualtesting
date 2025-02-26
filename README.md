@@ -13,5 +13,7 @@ instead.
 
 # Running the [Java tests](docs/README_Appium_Java.md)
 
+# Running the [Appium-Java tests in local Jenkins](docs/README_Jenkins.md)
+
 # Running the [Robot tests](docs/README_Robot.md)
 

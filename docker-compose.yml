@@ -1,0 +1,18 @@
+version: '3.8'
+services:
+  jenkins:
+    image: jenkins/jenkins:lts
+    container_name: jenkins
+    ports:
+      - "8080:8080" # Jenkins web UI
+      - "50000:50000" # Jenkins agent communication
+    volumes:
+      - jenkins_home:/var/jenkins_home # Persistent Jenkins data
+      - /etc/localtime:/etc/localtime:ro # Sync host timezone
+      - /etc/timezone:/etc/timezone:ro # Sync host timezone configuration
+    environment:
+      - TZ=Asia/Kolkata # Set timezone to IST
+    restart: unless-stopped # Automatically restart the container unless stopped manually
+
+volumes:
+  jenkins_home: # Declare the Jenkins data volume
