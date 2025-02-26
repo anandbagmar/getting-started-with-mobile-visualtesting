@@ -181,14 +181,16 @@ class VodqaTest {
 
         photoViewElement.click();
         WebElement backElement = waitTillElementIsPresent(driver, AppiumBy.xpath("//android.widget.TextView[@text=\"Back\"]"));
-        eyes.checkWindow("PhotoView");
+        eyes.checkWindow("Photo View");
 
         backElement.click();
         WebElement chainedViewElement = waitTillElementIsPresent(driver, AppiumBy.xpath("//android.widget.TextView[@content-desc=\"chainedView\"]"));
-        eyes.checkWindow("Back to home screen");
         chainedViewElement.click();
-
-        waitTillElementIsPresent(driver, AppiumBy.xpath("//android.widget.TextView[@content-desc=\"photoView\"]"));
+        backElement = waitTillElementIsPresent(driver, AppiumBy.xpath("//android.widget.TextView[@text=\"Back\"]"));
         eyes.checkWindow("Chained View");
+
+        backElement.click();
+        waitTillElementIsPresent(driver, AppiumBy.xpath("//android.widget.TextView[@content-desc=\"chainedView\"]"));
+        eyes.checkWindow("Back to main screen");
     }
 }
