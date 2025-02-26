@@ -105,8 +105,6 @@ docker-compose up -d
 3. **Complete the Setup**:
     - Install recommended plugins.
     - Create an admin user.
-    - Install [**Applitools Eyes Plugin**](https://plugins.jenkins.io/applitools-eyes/)
-        - NOTE: We are using a [pipeline project](../JenkinsFile). So the Applitools Plugin setup is done based on these [instructions](https://plugins.jenkins.io/applitools-eyes/#plugin-content-in-case-of-a-pipeline-project)
 ---
 
 ### **Step 5: Stop Jenkins**
