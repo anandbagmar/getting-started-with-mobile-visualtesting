@@ -38,7 +38,6 @@ Create a `docker-compose.yml` file to define the Jenkins service. This file will
 
 2. Create the `docker-compose.yml` file:
    ```yaml
-   version: '3.8'
    services:
      jenkins:
        image: jenkins/jenkins:lts
@@ -73,7 +72,7 @@ Create a `docker-compose.yml` file to define the Jenkins service. This file will
 ### **Step 3: Start Jenkins with Docker Compose**
 Run the following command to start Jenkins:
 ```bash
-docker-compose up -d
+  docker-compose up -d
 ```
 
 - The `-d` flag runs the container in detached mode (in the background).
@@ -110,7 +109,7 @@ docker-compose up -d
 ### **Step 5: Stop Jenkins**
 To stop the Jenkins server, run:
 ```bash
-docker-compose down
+  docker-compose down
 ```
 
 - This will stop and remove the Jenkins container but retain the `jenkins_home` volume for data persistence.

@@ -19,21 +19,16 @@ Configure the node
 #### Run from agent command line: (Unix)
 
 ```shell
-  
-  cd ../jenkins-docker/agent1
+    curl -sO http://localhost:8080/jnlpJars/agent.jar
 
-  curl -sO http://localhost:8080/jnlpJars/agent.jar
-
-  java -jar agent.jar -url http://localhost:8080/ -secret ccbda3b9a6430c02a180a1e88ff7d1fee5c8eb3500c59e0a62c8b715204535ef -name agent1 -webSocket -workDir "./jenkins-docker/agent1"
+    java -jar agent.jar -url http://localhost:8080/ -secret 493c41cdfeb4ce0c02c8c27552ee9143b810faee5e5fe6acf3788d6c4f60e83b -name agent1 -webSocket -workDir "/Users/anand.bagmar/projects/jenkins/agent1"
 ```
  
 Run from agent command line: (Windows)
 ```commandline
-    cd ..\jenkins-docker\agent1
-
     curl.exe -sO http://localhost:8080/jnlpJars/agent.jar
 
-    java -jar agent.jar -url http://localhost:8080/ -secret ccbda3b9a6430c02a180a1e88ff7d1fee5c8eb3500c59e0a62c8b715204535ef -name agent1 -webSocket -workDir "./jenkins-docker/agent1"
+    java -jar agent.jar -url http://localhost:8080/ -secret 493c41cdfeb4ce0c02c8c27552ee9143b810faee5e5fe6acf3788d6c4f60e83b -name agent1 -webSocket -workDir "/Users/anand.bagmar/projects/jenkins/agent1"
 ```
 
 If you prefer to use TCP instead of WebSockets, remove the -webSocket option. Run java -jar agent.jar -help for more.
