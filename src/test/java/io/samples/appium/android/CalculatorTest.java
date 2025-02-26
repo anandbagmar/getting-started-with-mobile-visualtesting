@@ -23,6 +23,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.Duration;
 import java.util.Date;
+import java.util.Objects;
 
 class CalculatorTest {
     private static final String className = CalculatorTest.class.getSimpleName();
@@ -48,16 +49,13 @@ class CalculatorTest {
     @BeforeSuite
     static void beforeAll() {
         startAppiumServer();
-        String batchName = className + "-NML=" + IS_NML + "-MULTI_DEVICE=" + IS_MULTI_DEVICE + "-" + new File(APK_NAME).getName();
-        String applitoolsBatchName = System.getenv("APPLITOOLS_BATCH_NAME") == null ? batchName : System.getenv("APPLITOOLS_BATCH_NAME");
+        String localBatchName = className + "-NML=" + IS_NML + "-MULTI_DEVICE=" + IS_MULTI_DEVICE + "-" + new File(APK_NAME).getName();
+        String ciBatchName = System.getenv("APPLITOOLS_BATCH_NAME");
+        String applitoolsBatchName = ciBatchName == null ? localBatchName : ciBatchName;
         batch = new BatchInfo(applitoolsBatchName);
         // If the test runs via Jenkins, set the batch ID accordingly.
         String batchId = System.getenv("APPLITOOLS_BATCH_ID");
-        if (batchId != null) {
-            batch.setId(batchId);
-        } else {
-            batch.setId(String.valueOf(epochSecond));
-        }
+        batch.setId(Objects.requireNonNullElseGet(batchId, () -> String.valueOf(epochSecond)));
         batch.addProperty("REPOSITORY_NAME", new File(System.getProperty("user.dir")).getName());
         System.out.println("Create AppiumRunner");
         System.out.printf("Batch name: %s%n", batch.getName());

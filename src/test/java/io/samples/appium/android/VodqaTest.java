@@ -19,6 +19,7 @@ import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Date;
+import java.util.Objects;
 
 import static io.samples.Wait.waitTillElementIsPresent;
 
@@ -45,9 +46,12 @@ class VodqaTest {
     @BeforeSuite
     static void beforeAll() {
         startAppiumServer();
-        String batchName = className + "-NML=" + IS_NML + "-MULTI_DEVICE=" + IS_MULTI_DEVICE + "-" + new File(APK_NAME).getName();
-        batch = new BatchInfo(batchName);
-        batch.setId(String.valueOf(epochSecond));
+        String localBatchName = className + "-NML=" + IS_NML + "-MULTI_DEVICE=" + IS_MULTI_DEVICE + "-" + new File(APK_NAME).getName();
+        String ciBatchName = System.getenv("APPLITOOLS_BATCH_NAME") == null ? localBatchName : System.getenv("APPLITOOLS_BATCH_NAME");
+        batch = new BatchInfo(ciBatchName);
+        // If the test runs via Jenkins, set the batch ID accordingly.
+        String batchId = System.getenv("APPLITOOLS_BATCH_ID");
+        batch.setId(Objects.requireNonNullElseGet(batchId, () -> String.valueOf(epochSecond)));
         batch.addProperty("REPOSITORY_NAME", new File(System.getProperty("user.dir")).getName());
         System.out.println("Create AppiumRunner");
         System.out.printf("Batch name: %s%n", batch.getName());
