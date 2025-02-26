@@ -1,5 +1,8 @@
 pipeline {
     agent any
+    environment{
+        APPLITOOLS_BATCH_ID = "${env.GIT_COMMIT}"
+    }
 
     stages {
         // Stage 1: Checkout the Git repository
@@ -16,17 +19,19 @@ pipeline {
             }
         }
 
-        // Stage 2: Setup appium
-        stage('Setup') {
-            steps {
-                sh 'npm install'
-            }
-        }
-
-        // Stage 3: Run Gradle tests
+        // Stage 2: Run Gradle tests
         stage('Run Tests') {
             steps {
-                sh './gradlew clean test --tests CalculatorTest'
+                withCredentials([string(credentialsId: 'f2e5c7d2-b71c-4669-8e52-1594f14895e5', variable: 'APPLITOOLS_API_KEY')]) {
+                    Applitools(serverURL: 'https://eyes.applitools.com', applitoolsApiKey: "$APPLITOOLS_API_KEY", dontCloseBatches: true, eyesScmIntegrationEnabled: true, notifyOnCompletion: true) {
+                        sh '''
+                            echo "Install appium"
+                            /opt/homebrew/bin/npm install
+                            echo "Start test execution"
+                            ./gradlew clean test --tests VodqaTest
+                        '''
+                    }
+                }
             }
         }
     }
