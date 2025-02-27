@@ -3,7 +3,7 @@
     "@appium/doctor": "2.1.15",
     "@appium/relaxed-caps-plugin": "1.0.6",
     "appium": "2.16.2",
-    "appium-uiautomator2-driver": "4.0.3",
+    "appium-uiautomator2-driver": "4.1.0",
     "appium-xcuitest-driver": "8.3.2"
   },
   "name": "teswiz-appium2.0",
