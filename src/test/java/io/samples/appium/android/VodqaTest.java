@@ -51,7 +51,7 @@ class VodqaTest {
     @BeforeSuite
     static void beforeAll() {
         startAppiumServer();
-        String localBatchName = className + "-NML=" + IS_NML + "-MULTI_DEVICE=" + IS_MULTI_DEVICE + "-" + new File(APK_NAME).getName();
+        String localBatchName = className;
         String ciBatchName = System.getenv("APPLITOOLS_BATCH_NAME") == null ? localBatchName : System.getenv("APPLITOOLS_BATCH_NAME");
         batch = new BatchInfo(ciBatchName);
         // If the test runs via Jenkins, set the batch ID accordingly.
