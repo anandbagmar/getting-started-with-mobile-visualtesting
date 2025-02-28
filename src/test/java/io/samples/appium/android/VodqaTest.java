@@ -11,6 +11,7 @@ import io.appium.java_client.service.local.AppiumDriverLocalService;
 import io.appium.java_client.service.local.AppiumServiceBuilder;
 import io.appium.java_client.service.local.flags.GeneralServerFlag;
 import io.samples.Wait;
+import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.testng.Assert;
@@ -176,19 +177,31 @@ class VodqaTest {
     }
 
     public static String getBranchName() {
+        if (!StringUtils.isEmpty(System.getenv("BRANCH_NAME"))) {
+            return System.getenv("BRANCH_NAME");
+        }
         try {
-            ProcessBuilder processBuilder = new ProcessBuilder("git", "rev-parse", "--abbrev-ref", "HEAD");
-            processBuilder.redirectErrorStream(true);
-            Process process = processBuilder.start();
-
-            try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
-                String branchName = reader.readLine().trim();
-                System.out.println("Branch: " + branchName);
+            // Try rev-parse (handles full clones, fails in detached HEAD)
+            String branchName = executeCommand("git rev-parse --abbrev-ref HEAD");
+            if (branchName != null && !branchName.equals("HEAD") && !branchName.isEmpty()) {
                 return branchName;
             }
+
+            return "main"; // Default fallback if everything fails
         } catch (IOException e) {
             e.printStackTrace();
             return "main";
+        }
+    }
+
+    private static String executeCommand(String command) throws IOException {
+        ProcessBuilder processBuilder = new ProcessBuilder("bash", "-c", command);
+        processBuilder.redirectErrorStream(true);
+        Process process = processBuilder.start();
+
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
+            String output = reader.readLine(); // Read the first line of output
+            return (output != null) ? output.trim() : ""; // Handle null values
         }
     }
 
