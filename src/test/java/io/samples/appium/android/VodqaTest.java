@@ -177,25 +177,28 @@ class VodqaTest {
 
     public static String getBranchName() {
         try {
-            // Try first method: rev-parse (might return "HEAD" in shallow clones)
+            // Try rev-parse (handles full clones, fails in detached HEAD)
             String branchName = executeCommand("git rev-parse --abbrev-ref HEAD");
-            if (!"HEAD".equals(branchName)) {
+            if (branchName != null && !branchName.equals("HEAD") && !branchName.isEmpty()) {
                 return branchName;
             }
 
-            // Try second method: symbolic-ref (more reliable in shallow clones)
+            // Try symbolic-ref (better for some shallow clones)
             branchName = executeCommand("git symbolic-ref --short HEAD");
-            if (!branchName.isEmpty()) {
+            if (branchName != null && !branchName.isEmpty()) {
                 return branchName;
             }
 
-            // Last fallback: Check remote origin HEAD (works even in shallow clones)
+            // Last fallback: Get the default branch from remote
             branchName = executeCommand("git remote show origin | grep 'HEAD branch' | awk '{print $NF}'");
-            return branchName.isEmpty() ? "main" : branchName;
+            if (branchName != null && !branchName.isEmpty()) {
+                return branchName;
+            }
 
+            return "main"; // Default fallback if everything fails
         } catch (IOException e) {
             e.printStackTrace();
-            return "main"; // Default branch fallback
+            return "main";
         }
     }
 
@@ -205,7 +208,8 @@ class VodqaTest {
         Process process = processBuilder.start();
 
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
-            return reader.readLine() != null ? reader.readLine().trim() : "";
+            String output = reader.readLine(); // Read the first line of output
+            return (output != null) ? output.trim() : ""; // Handle null values
         }
     }
 
