@@ -11,6 +11,7 @@ import io.appium.java_client.service.local.AppiumDriverLocalService;
 import io.appium.java_client.service.local.AppiumServiceBuilder;
 import io.appium.java_client.service.local.flags.GeneralServerFlag;
 import io.samples.Wait;
+import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.testng.Assert;
@@ -176,22 +177,13 @@ class VodqaTest {
     }
 
     public static String getBranchName() {
+        if (!StringUtils.isEmpty(System.getenv("BRANCH_NAME"))) {
+            return System.getenv("BRANCH_NAME");
+        }
         try {
             // Try rev-parse (handles full clones, fails in detached HEAD)
             String branchName = executeCommand("git rev-parse --abbrev-ref HEAD");
             if (branchName != null && !branchName.equals("HEAD") && !branchName.isEmpty()) {
-                return branchName;
-            }
-
-            // Try symbolic-ref (better for some shallow clones)
-            branchName = executeCommand("git symbolic-ref --short HEAD");
-            if (branchName != null && !branchName.isEmpty()) {
-                return branchName;
-            }
-
-            // Last fallback: Get the default branch from remote
-            branchName = executeCommand("git remote show origin | grep 'HEAD branch' | awk '{print $NF}'");
-            if (branchName != null && !branchName.isEmpty()) {
                 return branchName;
             }
 
