@@ -51,7 +51,7 @@ class VodqaTest {
     @BeforeSuite
     static void beforeAll() {
         startAppiumServer();
-        String localBatchName = className + "-NML=" + IS_NML + "-MULTI_DEVICE=" + IS_MULTI_DEVICE + "-" + new File(APK_NAME).getName();
+        String localBatchName = className;
         String ciBatchName = System.getenv("APPLITOOLS_BATCH_NAME") == null ? localBatchName : System.getenv("APPLITOOLS_BATCH_NAME");
         batch = new BatchInfo(ciBatchName);
         // If the test runs via Jenkins, set the batch ID accordingly.
@@ -175,28 +175,18 @@ class VodqaTest {
         eyes.open(driver, className, testInfo.getName());
     }
 
-    private static String getBranchName() {
+    public static String getBranchName() {
         try {
-            // Create a process builder for the git command
-            ProcessBuilder processBuilder = new ProcessBuilder("git", "branch", "--show-current");
+            ProcessBuilder processBuilder = new ProcessBuilder("git", "rev-parse", "--abbrev-ref", "HEAD");
             processBuilder.redirectErrorStream(true);
-
-            // Start the process
             Process process = processBuilder.start();
 
-            // Read the output of the command
-            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-            String branchName = reader.readLine();
-
-            // Wait for the process to complete
-            int exitCode = process.waitFor();
-            if (exitCode == 0) {
-                System.out.println("Current Git branch: " + branchName);
-            } else {
-                System.err.println("Failed to get Git branch name. Exit code: " + exitCode);
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
+                String branchName = reader.readLine().trim();
+                System.out.println("Branch: " + branchName);
+                return branchName;
             }
-            return branchName;
-        } catch (IOException | InterruptedException e) {
+        } catch (IOException e) {
             e.printStackTrace();
             return "main";
         }
@@ -204,29 +194,13 @@ class VodqaTest {
 
     @Test
     void vodQATest() {
-        WebElement loginElement = waitTillElementIsPresent(driver, AppiumBy.xpath("//android.widget.TextView[@text=\"LOG IN\"]"));
-        eyes.checkWindow("App Launched");
-
-        loginElement.click();
-        WebElement photoViewElement = waitTillElementIsPresent(driver, AppiumBy.xpath("//android.widget.TextView[@content-desc=\"photoView\"]"));
-        Wait.waitFor(2);
-        eyes.checkWindow("Logged in");
-
-        photoViewElement.click();
-        WebElement backElement = waitTillElementIsPresent(driver, AppiumBy.xpath("//android.widget.TextView[@text=\"Back\"]"));
-        Wait.waitFor(2);
-        eyes.checkWindow("Photo View");
-
-        backElement.click();
-        WebElement chainedViewElement = waitTillElementIsPresent(driver, AppiumBy.xpath("//android.widget.TextView[@content-desc=\"chainedView\"]"));
-        chainedViewElement.click();
-        backElement = waitTillElementIsPresent(driver, AppiumBy.xpath("//android.widget.TextView[@text=\"Back\"]"));
-        Wait.waitFor(2);
-        eyes.checkWindow("Chained View");
-
-        backElement.click();
-        waitTillElementIsPresent(driver, AppiumBy.xpath("//android.widget.TextView[@content-desc=\"chainedView\"]"));
-        Wait.waitFor(2);
-        eyes.checkWindow("Back to main screen");
+        System.out.println("Login and get to the Vertical Swiping screen");
+        eyes.check("Login screen", Target.window());
+        waitTillElementIsPresent(driver, AppiumBy.androidUIAutomator("new UiSelector().text(\"LOG IN\")")).click();
+        Wait.waitFor(4);
+        eyes.check("Home screen", Target.window());
+        waitTillElementIsPresent(driver, AppiumBy.androidUIAutomator("new UiSelector().text(\"Vertical swiping\")")).click();
+        Wait.waitFor(4);
+        eyes.check("Vertical Swiping screen manually", Target.window());
     }
 }
