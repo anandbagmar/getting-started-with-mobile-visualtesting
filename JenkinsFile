@@ -1,6 +1,11 @@
 pipeline {
     agent any
-    environment{
+
+    parameters {
+        string(name: 'BRANCH_NAME', defaultValue: 'main', description: 'Git branch to build')
+    }
+
+    environment {
         APPLITOOLS_BATCH_ID = "${env.GIT_COMMIT}"
     }
 
@@ -8,14 +13,18 @@ pipeline {
         // Stage 1: Checkout the Git repository
         stage('Checkout') {
             steps {
-                checkout([
-                    $class: 'GitSCM',
-                    branches: [[name: 'main']], // Specify the branch
-                    extensions: [
-                        [$class: 'CloneOption', depth: 1, shallow: true] // Shallow clone
-                    ],
-                    userRemoteConfigs: [[url: 'https://github.com/anandbagmar/getting-started-with-mobile-visualtesting.git']]
-                ])
+                script {
+                    def branch = params.BRANCH_NAME ?: 'main'
+                    echo "Checking out branch: ${branch}"
+                    checkout([
+                        $class: 'GitSCM',
+                        branches: [[name: branch]], // Use user-specified branch
+                        extensions: [
+                            [$class: 'CloneOption', depth: 1, shallow: true] // Shallow clone
+                        ],
+                        userRemoteConfigs: [[url: 'https://github.com/anandbagmar/getting-started-with-mobile-visualtesting.git']]
+                    ])
+                }
             }
         }
 
@@ -26,7 +35,7 @@ pipeline {
                     Applitools(serverURL: 'https://eyes.applitools.com', applitoolsApiKey: "$APPLITOOLS_API_KEY", dontCloseBatches: false, eyesScmIntegrationEnabled: true, notifyOnCompletion: true) {
                         sh '''
                             echo "Install appium"
-                            /opt/homebrew/bin/npm install
+                            npm install
                             echo "Start test execution"
                             ./gradlew clean test --tests VodqaTest
                         '''
