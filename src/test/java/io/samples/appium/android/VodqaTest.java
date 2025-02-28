@@ -2,6 +2,7 @@ package io.samples.appium.android;
 
 import com.applitools.eyes.*;
 import com.applitools.eyes.appium.Eyes;
+import com.applitools.eyes.appium.Target;
 import io.appium.java_client.AppiumBy;
 import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.android.AndroidDriver;
@@ -10,19 +11,19 @@ import io.appium.java_client.service.local.AppiumDriverLocalService;
 import io.appium.java_client.service.local.AppiumServiceBuilder;
 import io.appium.java_client.service.local.flags.GeneralServerFlag;
 import io.samples.Wait;
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.testng.Assert;
 import org.testng.annotations.*;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Date;
 import java.util.Objects;
-
-import static io.samples.Wait.waitTillElementIsPresent;
 
 class VodqaTest {
     private static final String className = VodqaTest.class.getSimpleName();
@@ -154,7 +155,7 @@ class VodqaTest {
 
         eyes.setLogHandler(new StdoutLogHandler(true));
         eyes.setBatch(batch);
-        eyes.setBranchName("main");
+        eyes.setBranchName(getBranchName());
         eyes.setEnvName("prod");
         eyes.addProperty("username", userName);
         eyes.setApiKey(APPLITOOLS_API_KEY);
@@ -169,6 +170,33 @@ class VodqaTest {
             //            eyes.setConfiguration(eyes.getConfiguration().addMobileDevice(new AndroidDeviceInfo(AndroidDeviceName.Pixel_4_XL)));
         }
         eyes.open(driver, className, testInfo.getName());
+    }
+
+    private static String getBranchName() {
+        try {
+            // Create a process builder for the git command
+            ProcessBuilder processBuilder = new ProcessBuilder("git", "branch", "--show-current");
+            processBuilder.redirectErrorStream(true);
+
+            // Start the process
+            Process process = processBuilder.start();
+
+            // Read the output of the command
+            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            String branchName = reader.readLine();
+
+            // Wait for the process to complete
+            int exitCode = process.waitFor();
+            if (exitCode == 0) {
+                System.out.println("Current Git branch: " + branchName);
+            } else {
+                System.err.println("Failed to get Git branch name. Exit code: " + exitCode);
+            }
+            return branchName;
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+            return "main";
+        }
     }
 
     @Test
