@@ -177,18 +177,35 @@ class VodqaTest {
 
     public static String getBranchName() {
         try {
-            ProcessBuilder processBuilder = new ProcessBuilder("git", "rev-parse", "--abbrev-ref", "HEAD");
-            processBuilder.redirectErrorStream(true);
-            Process process = processBuilder.start();
-
-            try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
-                String branchName = reader.readLine().trim();
-                System.out.println("Branch: " + branchName);
+            // Try first method: rev-parse (might return "HEAD" in shallow clones)
+            String branchName = executeCommand("git rev-parse --abbrev-ref HEAD");
+            if (!"HEAD".equals(branchName)) {
                 return branchName;
             }
+
+            // Try second method: symbolic-ref (more reliable in shallow clones)
+            branchName = executeCommand("git symbolic-ref --short HEAD");
+            if (!branchName.isEmpty()) {
+                return branchName;
+            }
+
+            // Last fallback: Check remote origin HEAD (works even in shallow clones)
+            branchName = executeCommand("git remote show origin | grep 'HEAD branch' | awk '{print $NF}'");
+            return branchName.isEmpty() ? "main" : branchName;
+
         } catch (IOException e) {
             e.printStackTrace();
-            return "main";
+            return "main"; // Default branch fallback
+        }
+    }
+
+    private static String executeCommand(String command) throws IOException {
+        ProcessBuilder processBuilder = new ProcessBuilder("bash", "-c", command);
+        processBuilder.redirectErrorStream(true);
+        Process process = processBuilder.start();
+
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
+            return reader.readLine() != null ? reader.readLine().trim() : "";
         }
     }
 
