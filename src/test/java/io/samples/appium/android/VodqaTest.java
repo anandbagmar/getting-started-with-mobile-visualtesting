@@ -175,28 +175,18 @@ class VodqaTest {
         eyes.open(driver, className, testInfo.getName());
     }
 
-    private static String getBranchName() {
+    public static String getBranchName() {
         try {
-            // Create a process builder for the git command
-            ProcessBuilder processBuilder = new ProcessBuilder("git", "branch", "--show-current");
+            ProcessBuilder processBuilder = new ProcessBuilder("git", "rev-parse", "--abbrev-ref", "HEAD");
             processBuilder.redirectErrorStream(true);
-
-            // Start the process
             Process process = processBuilder.start();
 
-            // Read the output of the command
-            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-            String branchName = reader.readLine();
-
-            // Wait for the process to complete
-            int exitCode = process.waitFor();
-            if (exitCode == 0) {
-                System.out.println("Current Git branch: " + branchName);
-            } else {
-                System.err.println("Failed to get Git branch name. Exit code: " + exitCode);
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
+                String branchName = reader.readLine().trim();
+                System.out.println("Branch: " + branchName);
+                return branchName;
             }
-            return branchName;
-        } catch (IOException | InterruptedException e) {
+        } catch (IOException e) {
             e.printStackTrace();
             return "main";
         }
